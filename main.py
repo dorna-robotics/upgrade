@@ -13,9 +13,17 @@ class firmware(object):
 	"""
 	def update(self):
 		split_cmd = shlex.split("sudo sh firmware")
-		process = subprocess.Popen(split_cmd,stdout=subprocess.PIPE, shell=True)
-		process.wait()
-		print("done")
+		self.p = subprocess.Popen(split_cmd,stdout=subprocess.PIPE, shell=True)
+		while True:
+			output = self.p.stdout.readline()
+			if self.p.poll() is not None and output == b'':
+			    break
+			if output:
+				print(output)
+			time.sleep(0.001)
+
+		retval = self.p.poll()
+
 
 
 if __name__ == '__main__':
