@@ -1,14 +1,29 @@
 # Upgrade
 
-## Setup
+## Directory
+```bash
+~/Downloads
+	|____ /upgrade
+	|____ /dorna_lab
+	|____ /dorna2_python
+
+~/projects
+	|____ /blockly
+	|____ /script
+	|____ /path_design
+	|____ /python
+```
 
 ## Manual upgrade
 `ssh` to your robot, make sure that the robot has access to the internet and clone the latest `upgrade` repository:
 ```bash
-sudo git clone https://github.com/dorna-robotics/upgrade.git temp
-sudo mv temp/.git ~/Downloads/upgrade/.git
-sudo rm -rf temp
+sudo rm -rf ~/Downloads/upgrade
+sudo mkdir ~/Downloads/upgrade  
+sudo git clone https://github.com/dorna-robotics/upgrade.git ~/Downloads/upgrade
+sudo python3 ~/Downloads/upgrade/main.py
 ```
+sudo git pull https://github.com/dorna-robotics/upgrade.git
+
 Make sure the robot is connected to the internet, and clone the latest `upgrade` repository:
 `shekk
 sudo git clone https://github.com/dorna-robotics/upgrade.git temp
