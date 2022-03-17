@@ -1,5 +1,5 @@
 import subprocess
-
+import shlex
 
 class firmware(object):
 	"""docstring for firmware"""
@@ -12,7 +12,8 @@ class firmware(object):
 	firmware.sh
 	"""
 	def update(self):
-		process = subprocess.Popen(["sudo", "sh", "firmware"],stdout=subprocess.PIPE, shell=True)
+		split_cmd = shlex.split("sudo sh firmware")
+		process = subprocess.Popen(split_cmd,stdout=subprocess.PIPE, shell=True)
 		process.wait()
 		print("done")
 
