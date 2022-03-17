@@ -15,7 +15,9 @@ class firmware(object):
 		split_cmd = shlex.split("sh firmware")
 		self.p = subprocess.Popen(split_cmd,stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 		while True:
+			self.p.stdout.flush()
 			output = self.p.stdout.readline()
+			self.p.stdout.flush()
 			error = self.p.stderr.readline()
 			print("error: ", error)
 			print("output: ", output)
