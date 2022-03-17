@@ -3,7 +3,7 @@ import subprocess
 
 class firmware(object):
 	"""docstring for firmware"""
-	def __init__(self, url, path):
+	def __init__(self, url=None, path=None):
 		super(firmware, self).__init__()
 		self.url = url
 		self.path = path
@@ -11,8 +11,11 @@ class firmware(object):
 	"""
 	firmware.sh
 	"""
-	def update()
+	def update():
 		process = subprocess.Popen(["sudo", "sh", "firmware"],stdout=subprocess.PIPE, shell=True)
 		process.wait()
 		print("done")
-		
+
+
+if __name__ == '__main__':
+	f = firmware().update()
