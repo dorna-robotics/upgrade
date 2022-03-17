@@ -12,7 +12,7 @@ class firmware(object):
 	firmware.sh
 	"""
 	def update(self):
-		split_cmd = shlex.split("sudo sh firmware")
+		split_cmd = shlex.split("sh firmware")
 		self.p = subprocess.Popen(split_cmd,stdout=subprocess.PIPE, shell=True)
 		while True:
 			output = self.p.stdout.readline()

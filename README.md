@@ -20,7 +20,8 @@
 sudo rm -rf ~/Downloads/upgrade
 sudo mkdir ~/Downloads/upgrade  
 sudo git clone https://github.com/dorna-robotics/upgrade.git ~/Downloads/upgrade
-sudo python3 ~/Downloads/upgrade/main.py
+cd ~/Downloads/upgrade
+sudo python3 main.py
 ```
 sudo git pull https://github.com/dorna-robotics/upgrade.git
 
