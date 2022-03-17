@@ -11,7 +11,7 @@ class firmware(object):
 	"""
 	firmware.sh
 	"""
-	def update():
+	def update(self):
 		process = subprocess.Popen(["sudo", "sh", "firmware"],stdout=subprocess.PIPE, shell=True)
 		process.wait()
 		print("done")
