@@ -1,35 +1,35 @@
-import subprocess
-import shlex
+def update_config(pattern=["dtoverlay=pi3-miniuart-bt\n", "enable_uart=1\n"], path="/boot/config.txt", msg=""):	
+	# look for pattern
+	with open(path, "r") as f:
+		lines = f.readlines()
+		pattern_write = [p for p in pattern if p not in lines ]
 
-class firmware(object):
-	"""docstring for firmware"""
-	def __init__(self, url=None, path=None):
-		super(firmware, self).__init__()
-		self.url = url
-		self.path = path
+	if pattern_write:
+		lines += [msg+"\n"] + pattern_write
+		with open(path, "w") as f:
+			for l in lines:
+				f.write(l)
 
-	"""
-	firmware.sh
-	"""
-	def update(self):
-		split_cmd = shlex.split("sh firmware")
-		self.p = subprocess.Popen(split_cmd,stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-		while True:
-			self.p.stdout.flush()
-			output = self.p.stdout.readline()
-			self.p.stdout.flush()
-			error = self.p.stderr.readline()
-			print("error: ", error)
-			print("output: ", output)
-			if self.p.poll() is not None and output == b'':
-			    break
-			if output:
-				print(output)
-			time.sleep(0.001)
+# write before exit(0)
+def update_rc(pattern=["sudo /home/dorna/app/a.out &\n"], path="/etc/rc.local", msg=""):	
+	# look for pattern
+	with open(path, "r") as f:
+		lines = f.readlines()
+		pattern_write = [p for p in pattern if p not in lines ]
 
-		retval = self.p.poll()
-
-
-
-if __name__ == '__main__':
-	f = firmware().update()
+	if pattern_write:
+		# search for exit(0)
+		i = 0
+		for l in lines:
+			if "exit 0\n" in l:
+				print("yes: ", l)
+				break
+			else:
+				i+=1
+		print(lines[0:i])
+		print()
+		print(lines[i:])
+		lines = lines[0:i] + [msg+"\n"] + pattern_write + lines[i:]
+		with open(path, "w") as f:
+			for l in lines:
+				f.write(l)
