@@ -2,14 +2,14 @@
 # api
 cd api
 sh setup.sh
-cd..
+cd ..
 
 # firmware
 cd dorna_lab
 sh setup.sh
-cd..
+cd ..
 
 # firmware
 cd firmware
 sh setup.sh
-cd..
+cd ..
