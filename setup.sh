@@ -1,6 +1,6 @@
 #!/bin/bash 
 # api
-cd ~/Downloads/upgrade/api
+cd $HOME/Downloads/upgrade/api
 sh setup.sh
 
 # firmware
