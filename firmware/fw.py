@@ -33,3 +33,10 @@ def update_rc(pattern=["sudo /home/dorna/app/a.out &\n"], path="/etc/rc.local", 
 		with open(path, "w") as f:
 			for l in lines:
 				f.write(l)
+
+if __name__ == '__main__':
+	# update config.txt
+	fw().update_config()
+
+	# update rc.local
+	fw().update_rc()

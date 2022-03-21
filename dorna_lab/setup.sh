@@ -7,13 +7,14 @@ mkdir ~/Downloads/dorna_lab
 git clone --branch blockly https://gitlab.com/smhty/dorna_lab.git ~/Downloads/dorna_lab
 
 # create directory
+mkdir ~/projects
 mkdir ~/projects/blockly
 mkdir ~/projects/script
 mkdir ~/projects/path_design
 mkdir ~/projects/python
 
-# update service
-
 # run the update
-cd ~/Downloads/dorna_lab
-python3 setup.py install --force
+pip3 install -r requirements.txt --upgrade --force-reinstall
+
+# update service
+python3 service.py

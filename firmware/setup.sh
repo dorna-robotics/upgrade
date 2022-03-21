@@ -7,7 +7,6 @@ mkdir ~/app
 git clone https://github.com/dorna-robotics/firmware.git ~/app
 
 # update config.txt and rc.local
-cd ~/Downloads/upgrade
 python3 fw.py
 
 # run the update
