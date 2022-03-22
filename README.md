@@ -2,7 +2,7 @@
 
 ## Directory
 ```bash
-~/projects
+~/Projects
 	|____ /blockly
 	|____ /script
 	|____ /path_design

@@ -7,11 +7,11 @@ mkdir /home/dorna/Downloads/dorna_lab
 git clone --branch blockly https://gitlab.com/smhty/dorna_lab.git /home/dorna/Downloads/dorna_lab
 
 # create directory
-mkdir /home/dorna/projects
-mkdir /home/dorna/projects/blockly
-mkdir /home/dorna/projects/script
-mkdir /home/dorna/projects/path_design
-mkdir /home/dorna/projects/python
+mkdir /home/dorna/Projects
+mkdir /home/dorna/Projects/blockly
+mkdir /home/dorna/Projects/script
+mkdir /home/dorna/Projects/path_design
+mkdir /home/dorna/Projects/python
 
 # run the update
 pip3 install -r requirements.txt --upgrade --force-reinstall
