@@ -1,15 +1,15 @@
 #!/bin/bash 
 # api
-cd api
+cd /home/dorna/Downloads/upgrade/api
 sh setup.sh
-cd ..
 
 # firmware
-cd dorna_lab
+cd /home/dorna/Downloads/upgrade/dorna_lab
 sh setup.sh
-cd ..
 
 # firmware
-cd firmware
+cd /home/dorna/Downloads/upgrade/firmware
 sh setup.sh
-cd ..
+
+# reboot
+reboot

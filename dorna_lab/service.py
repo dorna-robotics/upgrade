@@ -8,7 +8,7 @@ def main():
 			cron.remove(job)
 
 	# add the new comment
-	job = cron.new("sudo python3 ~/Downloads/dorna_lab/dorna_lab/application.py", "dorna_lab")
+	job = cron.new("sudo python3 /home/dorna/Downloads/dorna_lab/dorna_lab/application.py", "dorna_lab")
 	job.every_reboot()
 	cron.write()
 
