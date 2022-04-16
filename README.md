@@ -19,17 +19,21 @@ sudo rm -rf /home/dorna/Downloads/upgrade && sudo mkdir /home/dorna/Downloads/up
 Get the ARM version
 
 ```bash
-cd ~/Downloads
+cd /home/dorna/Downloads
 sudo wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.tgz
 sudo tar xvzf ~/Downloads/ngrok-stable-linux-arm.tgz -C /usr/local/bin
 ```
-for ssh
-	ngrok tcp 22
-	gives you a forwarding url like this tcp://4.tcp.ngrok.io:18764
-	ssh dorna@4.tcp.ngrok.io -p 18764
+### SSH
+```bash
+ngrok tcp 22
+sudo wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.tgz
+sudo tar xvzf ~/Downloads/ngrok-stable-linux-arm.tgz -C /usr/local/bin
+```
+Gives you a forwarding url like this `tcp://4.tcp.ngrok.io:18764`
+You can then ssh to the controller by `ssh dorna@4.tcp.ngrok.io -p 18764`
 
 Once you ssh, you can use python to connect to the robot
-For example robot.connect()
+For example `robot.connect()`
 
-for http:
-	you get the https address to access the robot
+### HTTPS
+You get the https address to access the robot
