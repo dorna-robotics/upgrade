@@ -1,9 +1,0 @@
-setuptools
-flask
-flask-socketio
-Click
-itsdangerous
-Jinja2
-MarkupSafe
-Werkzeug
-python-crontab
