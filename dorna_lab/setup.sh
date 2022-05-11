@@ -4,6 +4,7 @@ dir="/home/dorna/Downloads/dorna_lab"
 repo="https://gitlab.com/smhty/dorna_lab.git"
 branch="hamed"
 project="/home/dorna/Projects"
+project_sub_dir="blockly script path_design python"
 
 cron_name="dorna"
 cron_path="$dir/dorna_lab/application.py"
@@ -23,7 +24,7 @@ pip3 install -r requirements.txt --upgrade --force-reinstall
 
 # create project directory
 mkdir $project
-for val in "blockly script path_design python"; do
+for val in $project_sub_dir; do
     mkdir $project/$val
 done
 

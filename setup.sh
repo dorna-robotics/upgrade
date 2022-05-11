@@ -1,5 +1,7 @@
-#!/bin/bash 
-for val in "api dorna_lab firmware"; do
+#!/bin/bash
+upgrade="api dorna_lab"
+
+for val in $upgrade; do
     cd $(pwd)/$val
     sh setup.sh
 done
