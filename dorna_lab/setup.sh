@@ -1,21 +1,31 @@
 #!/bin/bash
+# variables
+dir="/home/dorna/Downloads/dorna_lab"
+repo="https://gitlab.com/smhty/dorna_lab.git"
+branch="hamed"
+project="/home/dorna/Projects"
+
+cron_name="dorna"
+cron_path="$dir/dorna_lab/application.py"
+cron_comment="dorna_lab"
+
 # remove and reopen the folder
-rm -rf /home/dorna/Downloads/dorna_lab
-mkdir /home/dorna/Downloads/dorna_lab
+rm -rf $dir
+mkdir $dir
 
 # clone the repo
-git clone --branch hamed https://gitlab.com/smhty/dorna_lab.git /home/dorna/Downloads/dorna_lab
+git clone --branch $branch $repo $dir
 
-# create directory
-mkdir /home/dorna/Projects
-mkdir /home/dorna/Projects/blockly
-mkdir /home/dorna/Projects/script
-mkdir /home/dorna/Projects/path_design
-mkdir /home/dorna/Projects/python
-
-# update service
-python3 service.py
 
 # navigate to directory
-cd /home/dorna/Downloads/dorna_lab
+cd $dir
 pip3 install -r requirements.txt --upgrade --force-reinstall
+
+# create project directory
+mkdir $project
+for val in "blockly script path_design python"; do
+    mkdir $project/$val
+done
+
+# update service
+python3 service.py $cron_name $cron_path $cron_comment

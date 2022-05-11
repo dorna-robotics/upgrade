@@ -1,14 +1,18 @@
 #!/bin/bash 
+# variables
+dir="/home/dorna/app"
+repo="https://github.com/smhty/firmware.git"
+
 # remove and reopen the folder
-rm -rf /home/dorna/app
-mkdir /home/dorna/app
+rm -rf $dir
+mkdir $dir
 
 # clone the repo
-git clone https://github.com/dorna-robotics/firmware.git /home/dorna/app
+git clone $repo $dir
 
 # update config.txt and rc.local
 python3 fw.py
 
 # run the update
-cd /home/dorna/app
+cd $dir
 sh upgrade

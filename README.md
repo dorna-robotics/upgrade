@@ -7,6 +7,7 @@
 	|____ /script
 	|____ /path_design
 	|____ /python
+	|____ /tool	
 ```
 
 ## Manual upgrade
@@ -22,12 +23,11 @@ Get the ARM version
 cd /home/dorna/Downloads
 sudo wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.tgz
 sudo tar xvzf ~/Downloads/ngrok-stable-linux-arm.tgz -C /usr/local/bin
+ngrok authtoken <your auth token>
 ```
 ### SSH
 ```bash
 ngrok tcp 22
-sudo wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.tgz
-sudo tar xvzf ~/Downloads/ngrok-stable-linux-arm.tgz -C /usr/local/bin
 ```
 Gives you a forwarding url like this `tcp://4.tcp.ngrok.io:18764`
 You can then ssh to the controller by `ssh dorna@4.tcp.ngrok.io -p 18764`

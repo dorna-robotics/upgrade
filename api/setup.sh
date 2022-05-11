@@ -1,13 +1,18 @@
 #!/bin/bash
-# update directory
-rm -rf /home/dorna/Downloads/dorna_python
-mkdir /home/dorna/Downloads/dorna_python
+# variables
+dir="/home/dorna/Downloads/dorna_python"
+repo="https://github.com/dorna-robotics/dorna2-python.git"
+branch="asyncio"
+
+# remove and create the dir
+rm -rf $dir
+mkdir $dir
 
 # get the latest version
-git clone --branch asyncio https://github.com/dorna-robotics/dorna2-python.git /home/dorna/Downloads/dorna_python
+git clone --branch $branch $repo $dir
 
 # navigate to directory
-cd /home/dorna/Downloads/dorna_python
+cd $dir
 
 # install
 python3 setup.py install --force
