@@ -25,4 +25,5 @@ if __name__ == '__main__':
 	# Read arguments from command line
 	args = parser.parse_args()
 	
+	print(args.Name, args.Path, args.Comment)
 	main(args.Name, args.Path, args.Comment)

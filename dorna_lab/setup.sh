@@ -24,7 +24,7 @@ for val in $project_sub_dir; do
 done
 
 # update service
-python3 service.py $cron_name $cron_path $cron_comment
+python3 service.py -n $cron_name -p $cron_path -c $cron_comment
 echo "Service added"
 
 # navigate to directory
