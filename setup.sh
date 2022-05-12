@@ -1,8 +1,8 @@
 #!/bin/bash
 upgrade="api dorna_lab"
-
+root_path = $(pwd)
 for val in $upgrade; do
-    cd $(pwd)/$val
+    cd $root_path/$val
     sh setup.sh
 done
 
