@@ -7,8 +7,6 @@ for val in $upgrade; do
     sh setup.sh
 done
 
-sleep 10
-
 # reboot
 reboot
 
