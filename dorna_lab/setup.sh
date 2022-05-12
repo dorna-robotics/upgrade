@@ -24,9 +24,8 @@ for val in $project_sub_dir; do
 done
 
 # update service
-#python3 service.py -n $cron_name -p $cron_path -c $cron_comment
+python3 service.py -n $cron_name -p $cron_path -c $cron_comment
 
 # navigate to directory
 cd $dir
-#pip3 install -r requirements.txt --upgrade --force-reinstall
-pip3 install -r requirements.txt
+pip3 install -r requirements.txt --upgrade --force-reinstall
