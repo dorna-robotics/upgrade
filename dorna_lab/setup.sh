@@ -17,11 +17,6 @@ mkdir $dir
 # clone the repo
 git clone --branch $branch $repo $dir
 
-
-# navigate to directory
-cd $dir
-pip3 install -r requirements.txt --upgrade --force-reinstall
-
 # create project directory
 mkdir $project
 for val in $project_sub_dir; do
@@ -30,3 +25,7 @@ done
 
 # update service
 python3 service.py $cron_name $cron_path $cron_comment
+
+# navigate to directory
+cd $dir
+pip3 install -r requirements.txt --upgrade --force-reinstall
