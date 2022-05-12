@@ -11,11 +11,11 @@ cron_path="$dir/dorna_lab/application.py"
 cron_comment="dorna_lab"
 
 # remove and reopen the folder
-#rm -rf $dir
-#mkdir $dir
+rm -rf $dir
+mkdir $dir
 
 # clone the repo
-#git clone --branch $branch $repo $dir
+git clone --branch $branch $repo $dir
 
 # create project directory
 mkdir $project
