@@ -25,6 +25,7 @@ done
 
 # update service
 python3 service.py $cron_name $cron_path $cron_comment
+echo "Service added"
 
 # navigate to directory
 cd $dir
