@@ -26,7 +26,7 @@ done
 
 # navigate to directory
 cd $dir
-python3 -m pip install -r requirements.txt --upgrade --force-reinstall
+pip3 install -r requirements.txt --upgrade --force-reinstall
 
 # update service
 cd $current_dir

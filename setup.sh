@@ -1,5 +1,5 @@
 #!/bin/bash
-upgrade="python api dorna_lab"
+upgrade="api dorna_lab"
 dir=$(pwd)
 
 for val in $upgrade; do
@@ -11,4 +11,4 @@ done
 rm -rf $dir
 
 # reboot
-reboot
+#reboot
