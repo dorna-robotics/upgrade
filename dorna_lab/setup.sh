@@ -1,5 +1,6 @@
 #!/bin/bash
 # variables
+current_dir=$(pwd)
 dir="/home/dorna/Downloads/dorna_lab"
 repo="https://gitlab.com/smhty/dorna_lab.git"
 branch="hamed"
@@ -23,9 +24,10 @@ for val in $project_sub_dir; do
     mkdir $project/$val
 done
 
-# update service
-python3 service.py -n $cron_name -p $cron_path -c $cron_comment
-
 # navigate to directory
 cd $dir
 python3 -m pip install -r requirements.txt --upgrade --force-reinstall
+
+# update service
+cd $current_dir
+python3 service.py -n $cron_name -p $cron_path -c $cron_comment

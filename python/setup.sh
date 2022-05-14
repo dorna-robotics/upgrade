@@ -6,15 +6,16 @@ repo="https://www.python.org/ftp/python/"$version"/Python-"$version".tgz"
 dir="/home/dorna/Downloads/python"
 repo="https://github.com/smhty/firmware.git"
 
+# remove and reopen the folder
+rm -rf $dir
+mkdir $dir
+
 # check the version
 if hash python$version_short
 then
     exit
 fi
 
-# remove and reopen the folder
-rm -rf $dir
-mkdir $dir
 
 # install
 wget $repo -P $dir
