@@ -28,4 +28,4 @@ python3 service.py -n $cron_name -p $cron_path -c $cron_comment
 
 # navigate to directory
 cd $dir
-pip3 install -r requirements.txt --upgrade --force-reinstall
+python3 -m pip install -r requirements.txt --upgrade --force-reinstall

@@ -1,5 +1,5 @@
 #!/bin/bash
-upgrade="api dorna_lab"
+upgrade="python api dorna_lab"
 dir=$(pwd)
 
 for val in $upgrade; do
@@ -7,20 +7,8 @@ for val in $upgrade; do
     sh setup.sh
 done
 
+# remove upgrade
+rm -rf $dir
+
 # reboot
 reboot
-
-# api
-#cd $(pwd)/api
-#sh setup.sh
-
-# gui
-#cd $(pwd)/dorna_lab
-#sh setup.sh
-
-# firmware
-#cd $(pwd)/firmware
-#sh setup.sh
-
-# reboot
-#reboot
