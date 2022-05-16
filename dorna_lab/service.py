@@ -8,9 +8,11 @@ def main(name, path, comment):
 		if job.comment == comment:
 			cron.remove(job)
 
-	# add the new comment
-	job = cron.new("sudo python3 "+path , comment)
-	job.every_reboot()
+	if path:
+		# add the new comment
+		job = cron.new(path , comment)
+		job.every_reboot()
+	
 	cron.write()
 
 if __name__ == '__main__':
@@ -19,8 +21,8 @@ if __name__ == '__main__':
 
 	# Adding optional argument
 	parser.add_argument("-n", "--Name")
-	parser.add_argument("-p", "--Path")
 	parser.add_argument("-c", "--Comment")
+	parser.add_argument("-p", "--Path")
 
 	# Read arguments from command line
 	args = parser.parse_args()

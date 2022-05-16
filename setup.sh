@@ -8,7 +8,7 @@ for val in $upgrade; do
 done
 
 # remove upgrade
-rm -rf $dir
+#rm -rf $dir
 
 # reboot
 #reboot
