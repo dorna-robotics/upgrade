@@ -13,12 +13,12 @@ cron_path="$dir/dorna_lab/application.py"
 cron_comment="dorna_lab"
 
 # remove and reopen the folder
-#rm -rf $dir
-#mkdir $dir
+rm -rf $dir
+mkdir $dir
 
 # clone the repo
-#git clone --branch $branch $repo $dir
-git clone --branch $branch $repo $dir_temp
+git clone --branch $branch $repo $dir
+#git clone --branch $branch $repo $dir_temp
 
 # create project directory
 mkdir $project
@@ -27,10 +27,10 @@ for val in $project_sub_dir; do
 done
 
 # navigate to directory
-#cd $dir
-cd $dir_temp
+cd $dir
+#cd $dir_temp
 #pip3 install -r requirements.txt --upgrade --force-reinstall
-pip3 install -r requirements.txt --upgrade
+#pip3 install -r requirements.txt --upgrade
 
 # update service
 cd $current_dir
