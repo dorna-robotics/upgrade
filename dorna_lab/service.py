@@ -1,7 +1,8 @@
 import argparse
 from crontab import CronTab
 
-def main(name, path, comment):
+def main(name, comment, path=None):
+	print("crontab: ", name, comment, path)
 	cron = CronTab(name)
 	# search for existing job
 	for job in cron:
@@ -27,4 +28,4 @@ if __name__ == '__main__':
 	# Read arguments from command line
 	args = parser.parse_args()
 	
-	main(args.Name, args.Path, args.Comment)
+	main(args.Name, args.Comment, args.Path)
