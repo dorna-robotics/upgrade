@@ -29,11 +29,13 @@ done
 # navigate to directory
 #cd $dir
 cd $dir_temp
-pip3 install -r requirements.txt --upgrade --force-reinstall
+#pip3 install -r requirements.txt --upgrade --force-reinstall
+pip3 install -r requirements.txt --upgrade
 
 # update service
 cd $current_dir
 python3 service.py -n $cron_name -p $cron_path -c $cron_comment
+
 
 #Make a backup in "current.old"
 #mv $dir $dir.old
