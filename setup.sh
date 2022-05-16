@@ -8,8 +8,8 @@ for val in $upgrade; do
 done
 
 # remove upgrade
-cd ..
 rm -rf $dir
+cd ..
 
 # reboot
 #reboot
