@@ -13,12 +13,12 @@ cron_path="$dir/dorna_lab/application.py"
 cron_comment="dorna_lab"
 
 # remove and reopen the folder
-rm -rf $dir
+#rm -rf $dir
 mkdir $dir
 
 # clone the repo
-git clone --branch $branch $repo $dir
-#git clone --branch $branch $repo $dir_temp
+#git clone --branch $branch $repo $dir
+git clone --branch $branch $repo $dir_temp
 
 # create project directory
 mkdir $project
@@ -36,5 +36,5 @@ cd $dir_temp
 cd $current_dir
 python3 service.py -n $cron_name -p $cron_path -c $cron_comment
 
-#rsync -avh $dir_temp $dir --delete
-#rm -rf $dir_temp
+rsync -avh $dir_temp $dir --delete
+rm -rf $dir_temp
