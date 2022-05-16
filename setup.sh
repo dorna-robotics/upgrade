@@ -1,5 +1,5 @@
 #!/bin/bash
-upgrade="api"
+upgrade="dorna_lab"
 dir=$(pwd)
 
 for val in $upgrade; do
@@ -8,6 +8,7 @@ for val in $upgrade; do
 done
 
 # remove upgrade
+cd..
 rm -rf $dir
 
 # reboot
