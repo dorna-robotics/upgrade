@@ -13,12 +13,12 @@ cron_path="$dir/dorna_lab/application.py"
 cron_comment="dorna_lab"
 
 # remove and reopen the folder
-rm -rf $dir
-mkdir $dir
+#rm -rf $dir
+#mkdir $dir
 
 # clone the repo
-git clone --branch $branch $repo $dir
-#git clone --branch $branch $repo $dir_temp
+#git clone --branch $branch $repo $dir
+git clone --branch $branch $repo $dir_temp
 
 # create project directory
 mkdir $project
@@ -27,8 +27,8 @@ for val in $project_sub_dir; do
 done
 
 # navigate to directory
-cd $dir
-#cd $dir_temp
+#cd $dir
+cd $dir_temp
 #pip3 install -r requirements.txt --upgrade --force-reinstall
 #pip3 install -r requirements.txt --upgrade
 
@@ -36,6 +36,8 @@ cd $dir
 cd $current_dir
 python3 service.py -n $cron_name -p $cron_path -c $cron_comment
 
+rsync -avh $dir_temp $dir --delete
+rm -rf $dir_temp
 
 #Make a backup in "current.old"
 #mv $dir $dir.old
@@ -46,4 +48,5 @@ python3 service.py -n $cron_name -p $cron_path -c $cron_comment
 # remove the old and tmp directory
 #rm -rf $dir_temp
 #rm -rf $dir.old
+
 echo "ALIALI123"
