@@ -30,9 +30,9 @@ for val in $project_sub_dir; do
 done
 
 # update service
-cd $current_dir
-python3 service.py -n $cron_add_name -c $cron_add_comment -p $cron_add_path -d $cron_add_command
+#cd $current_dir
+#python3 service.py -n $cron_add_name -c $cron_add_comment -p $cron_add_path -d $cron_add_command
 
 # remove dorna lab service temporarily
-python3 service.py -n $cron_remove_name -c $cron_remove_comment
+#python3 service.py -n $cron_remove_name -c $cron_remove_comment
 
