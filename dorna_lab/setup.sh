@@ -14,7 +14,7 @@ cron_comment="dorna_lab"
 
 # remove and reopen the folder
 #rm -rf $dir
-#mkdir $dir
+mkdir $dir
 
 # clone the repo
 #git clone --branch $branch $repo $dir
