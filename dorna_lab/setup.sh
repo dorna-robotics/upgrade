@@ -46,3 +46,4 @@ python3 service.py -n $cron_name -p $cron_path -c $cron_comment
 # remove the old and tmp directory
 #rm -rf $dir_temp
 #rm -rf $dir.old
+echo "ALIALI123"
