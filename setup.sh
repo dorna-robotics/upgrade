@@ -9,7 +9,6 @@ done
 
 # remove upgrade
 rm -rf $dir
-cd ~
 
 # reboot
 #reboot
