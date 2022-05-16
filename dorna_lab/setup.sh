@@ -38,11 +38,11 @@ python3 service.py -n $cron_name -p $cron_path -c $cron_comment
 
 
 #Make a backup in "current.old"
-mv $dir $dir.old
+#mv $dir $dir.old
 
 #copy from backup
-cp -R $dir_temp $dir
+#cp -R $dir_temp $dir
 
 # remove the old and tmp directory
-rm -rf $dir_temp
-rm -rf $dir.old
+#rm -rf $dir_temp
+#rm -rf $dir.old
