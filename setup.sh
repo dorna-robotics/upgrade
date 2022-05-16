@@ -1,6 +1,5 @@
 #!/bin/bash
-#upgrade="api dorna_lab firmware"
-upgrade="firmware"
+upgrade="api dorna_lab"
 dir=$(pwd)
 
 for val in $upgrade; do
