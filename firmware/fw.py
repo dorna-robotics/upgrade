@@ -15,7 +15,7 @@ def update_rc(pattern=["sudo /home/dorna/app/a.out &\n"], path="/etc/rc.local", 
 	# look for pattern
 	with open(path, "r") as f:
 		lines = f.readlines()
-		pattern_write = [p for p in pattern if all([p[-12:0] not in l for l in lines])]
+		pattern_write = [p for p in pattern if all([p[-12:] not in l for l in lines])]
 
 	print(pattern_write)
 	print(lines)
