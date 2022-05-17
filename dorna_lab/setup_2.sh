@@ -33,4 +33,4 @@ python3 service.py -n $cron_add_name -c $cron_add_comment -p $cron_add_path -d c
 python3 service.py -n $cron_remove_name -c $cron_remove_comment
 
 # run dorna_lab instance
-$cron_add_path
+python3 $cron_add_path
