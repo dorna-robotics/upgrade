@@ -7,14 +7,6 @@ branch="hamed"
 project="/home/dorna/Projects"
 project_sub_dir="blockly script path_design python"
 
-cron_add_name="dorna"
-cron_add_path=$current_dir"/setup_1.sh"
-cron_add_command="sh"
-cron_add_comment="dorna_lab_setup_1"
-
-cron_remove_name="dorna"
-cron_remove_comment="dorna_lab"
-
 
 # remove and reopen the folder
 rm -rf $dir
@@ -31,8 +23,9 @@ done
 
 # update service
 cd $current_dir
-python3 service.py -n $cron_add_name -c $cron_add_comment -p $cron_add_path -d $cron_add_command
+python3 -c 'import ..service; service.cron_add("dorna", "dorna_lab_setup_1", "'$current_dir/setup_1.sh'", "sh")' 
+
 
 # remove dorna lab service temporarily
-python3 service.py -n $cron_remove_name -c $cron_remove_comment
+python3 -c 'import ..service; service.cron_remove("dorna", "dorna_lab")' 
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-upgrade=""
+upgrade="api dorna_lab"
 dir=$(pwd)
 
 # install the requirements
