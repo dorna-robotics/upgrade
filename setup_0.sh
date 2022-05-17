@@ -13,3 +13,6 @@ done
 # add service for setp_1: cron_add(name, comment, path, command)
 cd $dir
 python3 -c 'import service; service.cron_add("dorna", "upgrade_setup_1", "'$dir/setup_1.sh'", "sh")' 
+
+# shutdown 
+echo "Turn the controller off and and on to complete the update"
