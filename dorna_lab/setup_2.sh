@@ -22,7 +22,7 @@ cd $dir_temp
 pip3 install -r requirements.txt --upgrade
 
 # sync
-rsync -avh $dir_temp $dir --delete
+rsync -avh $dir_temp/ $dir/ --delete
 rm -rf $dir_temp
 
 # add service
