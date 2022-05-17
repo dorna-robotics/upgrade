@@ -1,8 +1,8 @@
 #!/bin/bash
 # sleep for 30 seconds
-sleep 30
+sleep 10
 
-upgrade="firmware api dorna_lab"
+upgrade="dorna_lab"
 dir=$(pwd)
 
 # remove setup_1 service
