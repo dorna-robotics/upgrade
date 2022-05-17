@@ -21,11 +21,6 @@ for val in $project_sub_dir; do
     mkdir $project/$val
 done
 
-# update service
-cd $current_dir
-python3 -c 'import ..service; service.cron_add("dorna", "dorna_lab_setup_1", "'$current_dir/setup_1.sh'", "sh")' 
-
-
 # remove dorna lab service temporarily
-python3 -c 'import ..service; service.cron_remove("dorna", "dorna_lab")' 
+python3 -c 'import sys; sys.path.append(".."); import service; service.cron_remove("dorna", "dorna_lab")' 
 

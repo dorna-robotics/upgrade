@@ -18,13 +18,9 @@ rsync -avh $dir_temp/ $dir/ --delete
 rm -rf $dir_temp
 
 
-# add service
+# add dorna_lab service
 cd $current_dir
-python3 -c 'import ..service; service.cron_add("dorna", "dorna_lab", "'$dir/dorna_lab/application.py'", "python3")' 
-
-
-# remove dorna lab service temporarily
-python3 -c 'import ..service; service.cron_remove("dorna", "dorna_lab_setup_1")' 
+python3 -c 'import sys; sys.path.append(".."); import service; service.cron_add("dorna", "dorna_lab", "'$dir/dorna_lab/application.py'", "python3")' 
 
 
 # run dorna_lab instance
