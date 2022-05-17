@@ -7,14 +7,13 @@ dir_temp="/home/dorna/Downloads/dorna_lab_temp"
 
 # remove and reopen the folder
 rm -rf $dir
-mkdir $dir
 
 # navigate to temp directory
 cd $dir_temp
 pip3 install -r requirements.txt --upgrade
 
-# sync
-rsync -avh $dir_temp/ $dir/ --delete
+# move
+mv $dir_temp $dir
 rm -rf $dir_temp
 
 

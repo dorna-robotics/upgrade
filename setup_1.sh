@@ -1,4 +1,7 @@
 #!/bin/bash
+# sleep for 30 seconds
+sleep 30
+
 upgrade="firmware api dorna_lab"
 dir=$(pwd)
 
