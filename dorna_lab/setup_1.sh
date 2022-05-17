@@ -10,7 +10,7 @@ cron_add_command="python3"
 cron_add_comment="dorna_lab"
 
 cron_remove_name="dorna"
-cron_remove_comment="dorna_lab_setup_2"
+cron_remove_comment="dorna_lab_setup_1"
 
 
 # remove and reopen the folder
@@ -29,7 +29,7 @@ rm -rf $dir_temp
 cd $current_dir
 python3 service.py -n $cron_add_name -c $cron_add_comment -p $cron_add_path -d cron_add_command
 
-# remove setup_2 service
+# remove setup_after service
 python3 service.py -n $cron_remove_name -c $cron_remove_comment
 
 # run dorna_lab instance

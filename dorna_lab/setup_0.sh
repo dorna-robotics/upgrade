@@ -8,9 +8,9 @@ project="/home/dorna/Projects"
 project_sub_dir="blockly script path_design python"
 
 cron_add_name="dorna"
-cron_add_path=$current_dir"/setup_2.sh"
+cron_add_path=$current_dir"/setup_1.sh"
 cron_add_command="sh"
-cron_add_comment="dorna_lab_setup_2"
+cron_add_comment="dorna_lab_setup_1"
 
 cron_remove_name="dorna"
 cron_remove_comment="dorna_lab"
@@ -30,9 +30,9 @@ for val in $project_sub_dir; do
 done
 
 # update service
-#cd $current_dir
-#python3 service.py -n $cron_add_name -c $cron_add_comment -p $cron_add_path -d $cron_add_command
+cd $current_dir
+python3 service.py -n $cron_add_name -c $cron_add_comment -p $cron_add_path -d $cron_add_command
 
 # remove dorna lab service temporarily
-#python3 service.py -n $cron_remove_name -c $cron_remove_comment
+python3 service.py -n $cron_remove_name -c $cron_remove_comment
 
