@@ -24,4 +24,4 @@ python3 -c 'import sys; sys.path.append(".."); import service; service.cron_add(
 
 
 # run dorna_lab instance
-python3 $dir/dorna_lab/application.py
+python3 $dir/dorna_lab/application.py &
