@@ -15,6 +15,3 @@ done
 
 # remove upgrade
 rm -rf $dir
-
-# reboot
-#reboot
