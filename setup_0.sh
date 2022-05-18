@@ -1,6 +1,7 @@
 #!/bin/bash
 upgrade="firmware api dorna_lab"
-dir=$(pwd)
+
+dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 # install the requirements
 pip3 install -r $dir/requirements.txt --upgrade

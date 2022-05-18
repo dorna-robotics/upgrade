@@ -1,17 +1,15 @@
 #!/bin/bash
-# sleep for 30 seconds
-sleep 10
-
 upgrade="dorna_lab"
-dir=$(pwd)
 
-# remove setup_1 service
-python3 -c 'import service; service.cron_remove("dorna", "upgrade_setup_1")' 
+dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 for val in $upgrade; do
     cd $dir/$val
     sh setup_1.sh
 done
+
+# remove setup_1 service
+python3 -c 'import service; service.cron_remove("dorna", "upgrade_setup_1")' 
 
 # remove upgrade
 rm -rf $dir

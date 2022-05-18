@@ -1,6 +1,5 @@
 #!/bin/bash
 # variables
-current_dir=$(pwd)
 dir="/home/dorna/Downloads/dorna_lab_temp"
 repo="https://gitlab.com/smhty/dorna_lab.git"
 branch="hamed"

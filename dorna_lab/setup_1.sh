@@ -1,6 +1,6 @@
 #!/bin/bash
 # variables
-current_dir=$(pwd)
+current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 dir="/home/dorna/Downloads/dorna_lab"
 dir_temp="/home/dorna/Downloads/dorna_lab_temp"
 
