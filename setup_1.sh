@@ -8,6 +8,7 @@ for val in $upgrade; do
     sh setup_1.sh
 done
 
+cd $dir
 # remove setup_1 service
 python3 -c 'import service; service.cron_remove("dorna", "upgrade_setup_1")' 
 
