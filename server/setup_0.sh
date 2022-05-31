@@ -12,3 +12,7 @@ git clone $repo $dir
 
 # update config.txt and rc.local
 python3 server.py
+
+# run the upgrade
+cd $dir
+sh upgrade.sh
