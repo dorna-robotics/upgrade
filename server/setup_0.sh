@@ -1,7 +1,7 @@
 #!/bin/bash 
 # variables
 dir="/home/dorna/app"
-repo="https://github.com/smhty/firmware.git"
+repo="https://github.com/smhty/server.git"
 
 # remove and reopen the folder
 rm -rf $dir
@@ -11,8 +11,4 @@ mkdir $dir
 git clone $repo $dir
 
 # update config.txt and rc.local
-python3 fw.py
-
-# run the update
-cd $dir
-sh upgrade
+python3 server.py

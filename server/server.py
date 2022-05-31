@@ -38,7 +38,7 @@ def update_rc(pattern=["sudo /home/dorna/app/a.out &\n"], path="/etc/rc.local", 
 
 if __name__ == '__main__':
 	# update config.txt
-	update_config()
+	#update_config()
 
 	# update rc.local
 	update_rc()
