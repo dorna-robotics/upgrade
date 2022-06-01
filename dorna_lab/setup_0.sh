@@ -1,6 +1,7 @@
 #!/bin/bash
 # variables
-dir="/home/dorna/Downloads/dorna_lab_temp"
+current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+dir="/home/dorna/Downloads/dorna_lab"
 repo="https://gitlab.com/smhty/dorna_lab.git"
 branch="hamed"
 project="/home/dorna/Projects"
@@ -14,12 +15,15 @@ mkdir $dir
 # clone the repo
 git clone --branch $branch $repo $dir
 
+cd $dir
+pip3 install -r requirements.txt --upgrade
+
 # create project directory
 mkdir $project
 for val in $project_sub_dir; do
     mkdir $project/$val
 done
 
-# remove dorna lab service temporarily
-python3 -c 'import sys; sys.path.append(".."); import service; service.cron_remove("dorna", "dorna_lab")' 
+cd $current_dir
+python3 -c 'import sys; sys.path.append(".."); import service; service.cron_add("dorna", "dorna_lab", "'$dir/dorna_lab/application.py'", "python3")' 
 
