@@ -12,6 +12,7 @@ git clone $repo $dir
 
 # navigate to directory
 cd $dir
+cd ..
 
 # install
-python3 setup.py install --force
+pip3 install --upgrade --force-reinstall dorna_python
