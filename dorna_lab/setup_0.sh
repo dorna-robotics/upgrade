@@ -2,8 +2,7 @@
 # variables
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 dir="/home/dorna/Downloads/dorna_lab"
-repo="https://gitlab.com/smhty/dorna_lab.git"
-branch="hamed"
+repo="https://github.com/smhty/dorna_lab.git"
 project="/home/dorna/Projects"
 project_sub_dir="blockly script path_design python"
 
@@ -13,7 +12,7 @@ rm -rf $dir
 mkdir $dir
 
 # clone the repo
-git clone --branch $branch $repo $dir
+git clone $repo $dir
 
 cd $dir
 pip3 install -r requirements.txt --upgrade
