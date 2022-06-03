@@ -1,5 +1,5 @@
 #!/bin/bash
-upgrade="server api dorna_lab"
+upgrade="api dorna_lab"
 
 dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
