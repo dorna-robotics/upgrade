@@ -22,5 +22,5 @@ rm -rf $dir
 
 # shutdown 
 echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-echo "@ Turn the controller OFF and and ON to complete the update. @"
+echo "@   Turn the controller OFF and ON to complete the update.   @"
 echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
