@@ -26,9 +26,6 @@ def update_rc(pattern=["sudo /home/dorna/app/a.out &\n"], path="/etc/rc.local", 
 				break
 			else:
 				i+=1
-		print(lines[0:i])
-		print()
-		print(lines[i:])
 		lines = lines[0:i] + [msg+"\n"] + pattern_write + lines[i:]
 		with open(path, "w") as f:
 			for l in lines:
