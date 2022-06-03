@@ -14,11 +14,13 @@ for val in $upgrade; do
     sh setup_0.sh
 done
 
-# shutdown 
-echo "Turn the controller off and and on to complete the update"
-
 # go to home
 cd ~
 
 # remove the directory
 rm -rf $dir
+
+# shutdown 
+echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+echo "@ Turn the controller off and and on to complete the update. @"
+echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
