@@ -7,13 +7,17 @@ project="/home/dorna/Projects"
 project_sub_dir="blockly script path_design python"
 
 # remove and reopen the folder
-rm -rf $dir
-mkdir $dir
+#rm -rf $dir
+#mkdir $dir
 
 # clone the repo
 git clone $repo $dir
-
+# navigate to directory
 cd $dir
+git restore .
+git pull
+
+# pip
 /home/dorna/Downloads/dorna_venv/bin/pip3 install -r requirements.txt --upgrade
 
 # create project directory
