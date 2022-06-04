@@ -22,7 +22,7 @@ done
 cd ~
 
 # remove the directory
-rm -rf $dir
+#rm -rf $dir
 
 # shutdown 
 echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
