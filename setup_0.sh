@@ -4,7 +4,7 @@
 python3 -m venv /home/dorna/Downloads/dorna_venv
 
 # sh folders
-upgrade="server api dorna_lab"
+upgrade="api dorna_lab server"
 
 dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
