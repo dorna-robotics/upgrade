@@ -1,17 +1,15 @@
 #!/bin/bash
+
+# create virtual env and activate
+python3 -m venv /home/dorna/Downloads/dorna_venv
+
+# sh folders
 upgrade="server api dorna_lab"
 
 dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
-# virtual env
-cd $dir
-source venv.sh
-
-# make downloads directory
-mkdir /home/dorna/Downloads
-
 # install the requirements
-pip3 install -r $dir/requirements.txt --upgrade
+/home/dorna/Downloads/dorna_venv/bin/pip3 install -r $dir/requirements.txt --upgrade
 
 for val in $upgrade; do
     cd $dir/$val

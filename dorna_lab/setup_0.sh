@@ -14,7 +14,7 @@ mkdir $dir
 git clone $repo $dir
 
 cd $dir
-pip3 install -r requirements.txt --upgrade
+/home/dorna/Downloads/dorna_venv/bin/pip3 install -r requirements.txt --upgrade
 
 # create project directory
 mkdir $project
@@ -23,5 +23,5 @@ for val in $project_sub_dir; do
 done
 
 cd $current_dir
-python3 -c 'import sys; sys.path.append(".."); import service; service.cron_add("dorna", "dorna_lab", "'$dir/dorna_lab/start.sh'", "sh")' 
+/home/dorna/Downloads/dorna_venv/bin/python3 -c 'import sys; sys.path.append(".."); import service; service.cron_add("dorna", "dorna_lab", "'$dir/dorna_lab/start.sh'", "sh")' 
 

@@ -11,7 +11,7 @@ mkdir $dir
 git clone $repo $dir
 
 # update config.txt and rc.local
-python3 server.py
+/home/dorna/Downloads/dorna_venv/bin/python3 server.py
 
 # run the upgrade
 cd $dir

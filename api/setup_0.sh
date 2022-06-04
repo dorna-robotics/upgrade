@@ -14,8 +14,8 @@ git clone $repo $dir
 cd $dir
 
 # install requirements
-pip3 install -r requirements.txt --upgrade
+/home/dorna/Downloads/dorna_venv/bin/pip3 install -r requirements.txt --upgrade
 
 # install package
 cd ..
-pip3 install --upgrade --force-reinstall dorna_python/
+/home/dorna/Downloads/dorna_venv/bin/pip3 install --upgrade --force-reinstall dorna_python/
