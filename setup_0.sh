@@ -5,7 +5,7 @@ dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 # virtual env
 cd $dir
-sh venv.sh
+source venv.sh
 
 # make downloads directory
 mkdir /home/dorna/Downloads
