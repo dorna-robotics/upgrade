@@ -14,7 +14,7 @@ git clone $repo $dir
 cd $dir
 
 # install requirements
-pip3 install -r requirements.txt --upgrade --force-reinstall
+pip3 install -r requirements.txt --upgrade
 
 # install package
 cd ..
