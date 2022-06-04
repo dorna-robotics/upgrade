@@ -1,5 +1,4 @@
 #!/bin/bash
 # create virtual env and activate
-dir_venv="/home/dorna/Downloads/dorna_venv"
-python3 -m venv $dir_venv
-source bin/activate
+python3 -m venv /home/dorna/Downloads/dorna_venv
+source /home/dorna/Downloads/dorna_venv/bin/activate
