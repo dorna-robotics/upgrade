@@ -14,11 +14,14 @@ def cron_remove(name, comment):
 	cron.write()
 	return cron
 
-def cron_add(name, comment, path, command):
+def cron_add(name, comment, path, command, sudo=True):
 	cron = cron_remove(name, comment)
 	if path and command:
 		# add the new comment
-		job = cron.new("sudo "+ command + " "+path , comment)
+		if sudo:
+			job = cron.new("sudo "+ command + " "+path , comment)
+		else:
+			job = cron.new(command + " "+path , comment)
 		job.every_reboot()
 
 	cron.write()
