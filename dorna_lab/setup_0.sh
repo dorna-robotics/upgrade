@@ -18,7 +18,7 @@ git restore .
 git pull
 
 # pip
-/home/dorna/Downloads/dorna_venv/bin/pip3 install -r requirements.txt --upgrade
+/home/dorna/Downloads/dorna_venv/bin/pip3 install --upgrade --force-reinstall -r requirements.txt
 
 # create project directory
 mkdir $project
@@ -28,5 +28,4 @@ done
 
 cd $current_dir
 /home/dorna/Downloads/dorna_venv/bin/python3 -c 'import sys; sys.path.append(".."); import service; service.cron_add("dorna", "dorna_lab", "'$dir/dorna_lab/start.sh'", "sh")'
-#/home/dorna/Downloads/dorna_venv/bin/python3 -c 'import sys; sys.path.append(".."); import service; service.cron_add("dorna", "dorna_lab", "'$dir/dorna_lab/start.sh'", "source", False)' 
 

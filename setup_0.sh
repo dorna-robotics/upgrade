@@ -9,7 +9,7 @@ upgrade="api dorna_lab server"
 dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 # install the requirements
-/home/dorna/Downloads/dorna_venv/bin/pip3 install -r $dir/requirements.txt --upgrade
+/home/dorna/Downloads/dorna_venv/bin/pip3 install --upgrade --force-reinstall -r $dir/requirements.txt
 
 for val in $upgrade; do
     cd $dir/$val
