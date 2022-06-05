@@ -18,6 +18,5 @@ git pull
 # install requirements
 /home/dorna/Downloads/dorna_venv/bin/pip3 install -r requirements.txt --upgrade
 
-# install package
-cd ..
-/home/dorna/Downloads/dorna_venv/bin/pip3 install --upgrade --force-reinstall dorna_python/
+# install the package
+/home/dorna/Downloads/dorna_venv/bin/ setup.py install --force
