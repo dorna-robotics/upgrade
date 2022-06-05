@@ -16,7 +16,8 @@ git restore .
 git pull
 
 # install requirements
-/home/dorna/Downloads/dorna_venv/bin/pip3 install --upgrade --force-reinstall -r requirements.txt
+/home/dorna/Downloads/dorna_venv/bin/pip3 install -r requirements.txt --upgrade --force-reinstall
 
-# install the package
-/home/dorna/Downloads/dorna_venv/bin/python3 setup.py install --force
+# install package
+cd ..
+/home/dorna/Downloads/dorna_venv/bin/pip3 install --upgrade --force-reinstall dorna_python/
