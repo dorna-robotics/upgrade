@@ -6,10 +6,6 @@ repo="https://github.com/smhty/dorna_lab.git"
 project="/home/dorna/Projects"
 project_sub_dir="blockly script path_design python"
 
-# remove and reopen the folder
-#rm -rf $dir
-#mkdir $dir
-
 # clone the repo
 git clone $repo $dir
 # navigate to directory
@@ -31,3 +27,10 @@ cd $current_dir
 #/home/dorna/Downloads/dorna_venv/bin/python3 -c 'import sys; sys.path.append(".."); import service; service.cron_add("dorna", "dorna_lab", "'$dir/dorna_lab/start.sh'", "sh")'
 python3 -c 'import sys; sys.path.append(".."); import service; service.cron_add("dorna", "dorna_lab", "'$dir/dorna_lab/start.sh'", "sh")'
 
+# create the startup bash
+if [ -f "$project/startup.sh" ]; then
+    echo "startup file exists."
+else 
+    mv startup.sh $project
+fi
+python3 -c 'import sys; sys.path.append(".."); import service; service.cron_add("dorna", "dorna_startup", "'$project/startup.sh'", "sh")'

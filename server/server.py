@@ -11,7 +11,7 @@ def update_config(pattern=["dtoverlay=pi3-miniuart-bt\n", "enable_uart=1\n"], pa
 				f.write(l)
 
 # write before exit(0)
-def update_rc(pattern=["sleep 5 &\n", "sudo /home/dorna/app/a.out &\n"], path="/etc/rc.local", msg=""):	
+def update_rc(pattern=["sudo /home/dorna/app/a.out &\n"], path="/etc/rc.local", msg=""):	
 	# look for pattern
 	with open(path, "r") as f:
 		lines = f.readlines()
