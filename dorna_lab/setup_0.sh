@@ -4,7 +4,7 @@ current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 dir="/home/dorna/Downloads/dorna_lab"
 repo="https://github.com/smhty/dorna_lab.git"
 project="/home/dorna/Projects"
-project_sub_dir="blockly script path_design python"
+project_sub_dir="blockly script path_design python git"
 
 # clone the repo
 git clone $repo $dir
