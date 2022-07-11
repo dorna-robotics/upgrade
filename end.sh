@@ -9,9 +9,9 @@ echo "Cleaning the buffer..."
 sleep 30
 
 # shutdown 
-echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
-echo "@    Update is completed, rebooting now...    @"
-echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+echo "@    Update is completed    @"
+echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"
 
 # reboot
 reboot
