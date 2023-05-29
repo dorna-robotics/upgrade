@@ -44,7 +44,7 @@ echo "###################################################"
 echo "#    Setup process is completed.                  #"
 echo "#    To complete the update:                      #"
 echo "#      1- Wait for 30 seconds.                    #"
-echo "#      2- Then turn the controller off and on.    #"
+echo "#      2- Then power cycle the controller.        #"
 echo "###################################################"
 
 # reboot
