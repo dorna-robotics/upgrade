@@ -8,6 +8,7 @@
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 dir="/home/dorna/Downloads/dorna_lab"
 config="/home/dorna/Downloads/dorna_lab/dorna_lab/config.log"
+startup="/home/dorna/Downloads/dorna_lab/dorna_lab/startup.log"
 repo="https://github.com/smhty/dorna_lab.git"
 project="/home/dorna/Projects"
 project_sub_dir="blockly script path_design python git"
@@ -65,6 +66,12 @@ python3 -c 'import sys; sys.path.append(".."); import service; service.cron_add(
 ################################
 #    create the startup bash   #
 ################################
+if [ -f "$startup" ]; then
+    echo "startup file exists."
+else 
+    mv startup.sh $startup
+fi
+
 if [ -f "$project/startup.sh" ]; then
     echo "startup file exists."
 else 
