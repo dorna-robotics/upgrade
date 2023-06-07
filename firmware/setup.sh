@@ -21,4 +21,4 @@ python3 Firmware_Upgrade.py
 python3 Lock_Flash.py
 
 # remove tmp folder
-rm -rf $dir_temp
+#rm -rf $dir_temp
