@@ -29,7 +29,7 @@ pip3 install -r $current_dir/requirements.txt
 
 for val in $upgrade; do
     cd $current_dir/$val
-    sh setup.sh $model
+    sh setup.sh $1
 done
 
 # remove the directory

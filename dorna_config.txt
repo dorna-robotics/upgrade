@@ -1,5 +1,0 @@
-# hardware: 2, 2S
-hardware=2
-
-
-
