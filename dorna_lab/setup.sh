@@ -25,27 +25,28 @@ git pull
 # pip
 pip3 install -r requirements.txt
 
-######################
-#    adjust model    #
-######################
+############################
+#    adjust config file    #
+############################
 # Define the key and value to add/update
 key="model"
 value=$1
 
+python3 dorna_lab/config_init.py $value
 # Check if the JSON file exists
-if [ -f "$config" ]; then
-    # Check if the key already exists in the JSON file
-    if grep -q "\"$key\"" "$config"; then
-        # Update the value of the existing key using sed
-        sed -i "s/\"$key\": \".*\"/\"$key\": \"$value\"/" "$config"
-    else
-        # Add a new key-value pair to the JSON file using sed
-        sed -i "s/{/{\"$key\": \"$value\", /" "$config"
-    fi
-else
-    # Create a new JSON file with the key-value pair
-    echo "{\"$key\": \"$value\"}" > "$config"
-fi
+#if [ -f "$config" ]; then
+#    # Check if the key already exists in the JSON file
+#    if grep -q "\"$key\"" "$config"; then
+#        # Update the value of the existing key using sed
+#        sed -i "s/\"$key\": \".*\"/\"$key\": \"$value\"/" "$config"
+#    else
+#        # Add a new key-value pair to the JSON file using sed
+#        sed -i "s/{/{\"$key\": \"$value\", /" "$config"
+#    fi
+#else
+#    # Create a new JSON file with the key-value pair
+#    echo "{\"$key\": \"$value\"}" > "$config"
+#fi
 
 
 ##################################
