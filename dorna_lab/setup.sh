@@ -29,7 +29,6 @@ pip3 install -r requirements.txt
 #    adjust config file    #
 ############################
 # Define the key and value to add/update
-key="model"
 value=$1
 
 python3 dorna_lab/config_init.py $value
