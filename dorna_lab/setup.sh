@@ -31,7 +31,7 @@ pip3 install -r requirements.txt
 # Define the key and value to add/update
 value=$1
 
-python3 dorna_lab/config_init.py $value
+python3 $dir/dorna_lab/config_init.py $value $config
 # Check if the JSON file exists
 #if [ -f "$config" ]; then
 #    # Check if the key already exists in the JSON file
