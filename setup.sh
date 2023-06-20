@@ -24,21 +24,6 @@ if dpkg --compare-versions "$version" lt 11; then
     exit 1
 fi
 
-######################################
-#    add lines to /boot/config.txt   #
-######################################
-lines="dtoverlay=pi3-miniuart-bt enable_uart=1"
-
-for line in $lines; do
-  if grep -Fxq "$line" /boot/config.txt; then
-    echo "Line '$line' already exists in /boot/config.txt"
-  else
-    echo "$line" | sudo tee -a /boot/config.txt
-    echo "Line '$line' added to /boot/config.txt"
-  fi
-done
-
-
 # install the requirements
 pip3 install -r $current_dir/requirements.txt
 
