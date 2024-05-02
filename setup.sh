@@ -41,10 +41,10 @@ sleep 30
 
 # shutdown 
 echo "###################################################"
-echo "#    Setup process is completed.                  #"
-echo "#    To complete the update:                      #"
-echo "#      1- Wait for 30 seconds.                    #"
-echo "#      2- Then power cycle the controller.        #"
+echo "#    Setup process is now finished.               #"
+echo "#    To finalize the update, follow these steps:  #"
+echo "#      1. Wait for 30 seconds.                    #"
+echo "#      2. Power cycle the controller.             #"
 echo "###################################################"
 
 # reboot

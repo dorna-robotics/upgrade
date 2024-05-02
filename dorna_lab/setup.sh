@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Define the key and value to add/update
+value=$1
+
 # keep the logs in config.log
 
 ###################
@@ -28,9 +31,6 @@ pip3 install -r requirements.txt
 ############################
 #    adjust config file    #
 ############################
-# Define the key and value to add/update
-value=$1
-
 python3 $dir/dorna_lab/config_init.py $value $config
 # Check if the JSON file exists
 #if [ -f "$config" ]; then
