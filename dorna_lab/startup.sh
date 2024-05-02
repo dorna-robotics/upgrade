@@ -8,7 +8,7 @@ sleep 5
 #####################
 # add a new line for each command that you want to run at the system startup
 # for example if you need to run a python file located at:
-# "/home/dorna/Projects/python/test.py"
+# /home/dorna/Projects/python/test.py
 #
 # Then add a new line to this file and use the "&" symbol at the end to jump to the next program without waiting for its completion.
 # python3 /home/dorna/Projects/python/test.py &
