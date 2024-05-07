@@ -12,7 +12,7 @@ current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 dir="/home/dorna/Downloads/dorna_lab"
 config="/home/dorna/Downloads/dorna_lab/dorna_lab/config.log"
 startup="/home/dorna/Downloads/dorna_lab/dorna_lab/startup.log"
-repo="-b master https://github.com/smhty/dorna_lab.git"
+repo="-b main https://github.com/smhty/dorna_lab.git"
 project="/home/dorna/Projects"
 project_sub_dir="blockly script path_design python git"
 
