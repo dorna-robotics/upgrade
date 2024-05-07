@@ -40,12 +40,12 @@ echo "Cleaning the buffer..."
 sleep 30
 
 # shutdown 
-echo "###################################################"
-echo "#    Setup process is now finished.               #"
-echo "#    To finalize the update, follow these steps:  #"
-echo "#      1. Wait for 30 seconds.                    #"
-echo "#      2. Power cycle the controller.             #"
-echo "###################################################"
+echo "#######################################################"
+echo "#    Setup process is now finished.                   #"
+echo "#    To finalize the update, follow the steps below:  #"
+echo "#      1. Wait for 30 seconds.                        #"
+echo "#      2. Power cycle the controller.                 #"
+echo "#######################################################"
 
 # reboot
 reboot
