@@ -4,12 +4,7 @@
 `ssh` to your robot, make sure that the robot has access to the internet and run the following series of commands in the terminal:
 ### config.txt
 ```bash
-sudo nano /boot/config.txt
-```
-Add these two lines to the end of file
-```bash
-dtoverlay=pi3-miniuart-bt
-enable_uart=1
+sudo sh -c 'printf "\ndtoverlay=pi3-miniuart-bt\nenable_uart=1\n" >> /boot/firmware/config.txt'
 ```
 ### raspi-config
 ```bash
