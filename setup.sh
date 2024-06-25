@@ -15,17 +15,17 @@ current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 version=$(grep -oP '(?<=VERSION_ID=").*(?=")' /etc/os-release)
 
 # Compare the version number
-if dpkg --compare-versions "$version" lt 11; then
+if dpkg --compare-versions "$version" lt 12; then
     echo "##################################################################################################################"
     echo "#    The Robot Operating System (OS) is outdated.                                                                #"
-    echo "#    Before proceeding, please upgrade your robot controller OS to the latest version (version 11 or higher).    #"
+    echo "#    Before proceeding, please upgrade your robot controller OS to the latest version (version 12 or higher).    #"
     echo "##################################################################################################################"
 
     exit 1
 fi
 
 # install the requirements
-pip3 install -r $current_dir/requirements.txt
+pip3 install -r $current_dir/requirements.txt --break-system-packages
 
 for val in $upgrade; do
     cd $current_dir/$val
