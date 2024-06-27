@@ -16,7 +16,7 @@ current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 version=$(grep -oP '(?<=VERSION_ID=").*(?=")' /etc/os-release)
 
 # Compare the version number
-if dpkg --compare-versions "$version" lt 12; then
+if dpkg --compare-versions "$version" lt 11; then
     echo "##################################################################################################################"
     echo "#    The Robot Operating System (OS) is outdated.                                                                #"
     echo "#    Before proceeding, please upgrade your robot controller OS to the latest version (version 12 or higher).    #"
