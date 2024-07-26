@@ -19,5 +19,5 @@ def update_rc(pattern=["sudo /home/dorna/app/a.out &\n"], path="/etc/rc.local", 
 				f.write(l)
 
 if __name__ == '__main__':
-	#update_rc()
-	pass
+	update_rc()
+	
