@@ -16,12 +16,11 @@ git restore .
 git pull
 
 # install requirements
-pip3 install -r requirements.txt
+pip3 install -r requirements.txt --break-system-packages
 
 #################
 #    install    #
 #################
 # install package
 cd ..
-pip3 install --upgrade --force-reinstall dorna_python/
-#pip3 install . --upgrade --force-reinstall --break-system-packages
+pip3 install --upgrade --force-reinstall dorna_python/ --break-system-packages
