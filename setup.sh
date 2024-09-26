@@ -26,7 +26,7 @@ if dpkg --compare-versions "$version" lt 11; then
 fi
 
 # install the requirements
-pip3 install -r $current_dir/requirements.txt
+pip3 install -r $current_dir/requirements.txt --break-system-packages
 
 for val in $upgrade; do
     cd $current_dir/$val
