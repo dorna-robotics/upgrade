@@ -15,6 +15,12 @@ current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 # Get the version number from /etc/os-release
 version=$(grep -oP '(?<=VERSION_ID=").*(?=")' /etc/os-release)
 
+####################
+#    kill a.out    # 
+####################
+sudo pkill -9 -f ~/app/a.out
+echo "Killing a.out"
+
 # Compare the version number
 if dpkg --compare-versions "$version" lt 11; then
     echo "##################################################################################################################"
