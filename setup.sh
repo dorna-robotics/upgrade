@@ -18,7 +18,7 @@ version=$(grep -oP '(?<=VERSION_ID=").*(?=")' /etc/os-release)
 ####################
 #    kill a.out    # 
 ####################
-[ -f ~/app/a.out ] && pkill -9 -f ~/app/a.out
+pkill -9 -f ~/app/a.out
 
 # Compare the version number
 if dpkg --compare-versions "$version" lt 11; then
