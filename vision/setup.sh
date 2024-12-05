@@ -3,7 +3,7 @@
 #    variables    #
 ###################
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-dir="/home/dorna/education"
+dir="/home/dorna/Downloads/vision"
 repo="https://github.com/dorna-robotics/education"
 
 ########################
