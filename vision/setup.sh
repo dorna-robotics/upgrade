@@ -15,5 +15,5 @@ cd $dir
 git restore .
 git pull
 
-# opencv
-# camera
+# install package
+pip3 install . --upgrade --force-reinstall --break-system-packages
