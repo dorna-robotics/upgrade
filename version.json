@@ -1,7 +1,17 @@
 {
-	"dorna_lab": "2.1.0",
-	"api": "2.1.3",
-	"server_dorna_2": "110",
-	"server_dorna_2s": "203",
-	"server_dorna_ta": "304"
+	"dorna_2":{
+		"server": "110",
+		"api": "2.1.3",
+		"dorna_lab": "2.1.0"
+	},
+	"dorna_2s":{
+		"server": "203",
+		"api": "2.1.3",
+		"dorna_lab": "2.1.0"
+	},
+	"dorna_ta":{
+		"server": "304",
+		"api": "2.1.3",
+		"dorna_lab": "2.1.0"
+	}
 }
