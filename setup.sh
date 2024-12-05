@@ -4,7 +4,7 @@
 #    variables    #
 ###################
 # sh folders
-upgrade="dorna_python dorna_lab camera vision education server firmware"
+upgrade="dorna_python dorna_lab education server firmware"
 #upgrade="dorna_python dorna_lab example wizard"
 # current dir
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
