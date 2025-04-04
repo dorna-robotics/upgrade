@@ -15,5 +15,8 @@ cd $dir
 git restore .
 git pull
 
+# install requirements
+pip3 install -r requirements.txt --break-system-packages
+
 # install package
 pip3 install . --upgrade --force-reinstall --break-system-packages
