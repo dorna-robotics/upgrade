@@ -26,6 +26,7 @@ cd $dir
 git restore .
 git pull
 # pip
+pip3 install --force-reinstall numpy
 pip3 install -r requirements.txt
 
 ############################
