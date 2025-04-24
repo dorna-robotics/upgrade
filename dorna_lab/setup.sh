@@ -26,8 +26,7 @@ cd $dir
 git restore .
 git pull
 # pip
-#pip3 install --force-reinstall numpy
-pip3 install --no-build-isolation --no-use-pep517 -r requirements.txt
+pip3 install -r requirements.txt
 
 ############################
 #    adjust config file    #
