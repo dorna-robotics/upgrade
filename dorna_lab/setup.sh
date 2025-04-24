@@ -26,7 +26,7 @@ cd $dir
 git restore .
 git pull
 # pip
-pip3 install -r requirements.txt --no-deps
+pip3 install -r requirements.txt --no-build-isolation
 
 ############################
 #    adjust config file    #
