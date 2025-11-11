@@ -3,8 +3,8 @@
 #    variables    #
 ###################
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-dir="/home/dorna/Downloads/vision"
-repo="https://github.com/dorna-robotics/dorna_vision"
+dir="/home/dorna/Downloads/path_planning"
+repo="https://github.com/dorna-robotics/path_planning"
 
 ########################
 #    clone the repo    #
@@ -15,8 +15,10 @@ cd $dir
 git restore .
 git pull
 
-# install requirements
-pip3 install -r requirements.txt --break-system-packages
+#clear old build
+rm -rf build/
 
-# install package
-pip3 install . --upgrade --force-reinstall --break-system-packages
+#make and install
+cmake --preset rpi-arm64
+cmake --build --preset build-rpi64 -j
+sudo cmake --install build/rpi-arm64
