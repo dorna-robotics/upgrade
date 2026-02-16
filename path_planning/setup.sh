@@ -20,4 +20,4 @@ rm -rf build/
 # make and install
 cmake --preset rpi-arm64
 cmake --build --preset build-rpi64 -j
-sudo cmake --install build/rpi-arm64
+cmake --install build/rpi-arm64
