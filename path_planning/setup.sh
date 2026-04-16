@@ -3,11 +3,11 @@
 #    variables    #
 ###################
 # Load environment variables
-#!/bin/sh
 
-if [ -f "$HOME/.bashrc" ]; then
-    . "$HOME/.bashrc"
-fi
+VCPKG_ROOT="/home/dorna/Downloads/vcpkg"
+export VCPKG_ROOT
+PATH="$VCPKG_ROOT:$PATH"
+export PATH
 
 echo "VCPKG_ROOT=$VCPKG_ROOT"
 
