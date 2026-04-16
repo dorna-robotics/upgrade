@@ -3,7 +3,14 @@
 #    variables    #
 ###################
 # Load environment variables
-. "$HOME/.bashrc"
+#!/bin/sh
+
+if [ -f "$HOME/.bashrc" ]; then
+    . "$HOME/.bashrc"
+fi
+
+echo "VCPKG_ROOT=$VCPKG_ROOT"
+
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 dir="/home/dorna/Downloads/path_planning"
 repo="https://github.com/dorna-robotics/path_planning"
