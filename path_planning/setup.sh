@@ -24,7 +24,7 @@ git restore .
 git pull
 
 # clear old build
-rm -rf build/
+# rm -rf build/
 
 # make and install
 cmake --preset rpi-arm64
