@@ -7,14 +7,18 @@ dir="/home/dorna/Downloads/workspace"
 repo="https://github.com/dorna-robotics/workspace"
 
 ########################
-#    clone the repo    #
+#    clone or pull     #
 ########################
-git clone $repo $dir
-# navigate to directory
-cd $dir
-cd workspace
-git restore .
-git pull
+if [ -d "$dir/.git" ]; then
+    cd $dir
+    git restore .
+    git pull
+else
+    rm -rf $dir
+    git clone $repo $dir
+    cd $dir
+fi
 
-# install package
+# navigate to package and install
+cd workspace
 pip3 install -e . --break-system-packages

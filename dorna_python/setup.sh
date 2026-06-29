@@ -6,14 +6,17 @@ dir="/home/dorna/Downloads/dorna_python"
 repo="https://github.com/dorna-robotics/dorna2-python.git"
 
 ########################
-#    clone the repo    #
+#    clone or pull     #
 ########################
-git clone $repo $dir
-
-# navigate to directory
-cd $dir
-git restore .
-git pull
+if [ -d "$dir/.git" ]; then
+    cd $dir
+    git restore .
+    git pull
+else
+    rm -rf $dir
+    git clone $repo $dir
+    cd $dir
+fi
 
 # install requirements
 pip3 install -r requirements.txt --break-system-packages
@@ -21,5 +24,5 @@ pip3 install -r requirements.txt --break-system-packages
 #################
 #    install    #
 #################
-# install package
-pip3 install . --upgrade --force-reinstall --break-system-packages
+# editable install
+pip3 install -e . --break-system-packages
