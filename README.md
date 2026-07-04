@@ -19,8 +19,15 @@ sudo raspi-config
 - Finish and reboot
 
 ### Dorna TA
+
+First-time upgrade (run the full command once):
 ```bash
 sudo mkdir -p /home/dorna/Downloads && sudo rm -rf /home/dorna/Downloads/upgrade && sudo mkdir /home/dorna/Downloads/upgrade && sudo git clone -b dorna_ta https://github.com/dorna-robotics/upgrade.git /home/dorna/Downloads/upgrade && cd /home/dorna/Downloads/upgrade && sudo sh setup.sh dorna_ta
+```
+
+After the first upgrade, the `upgrade` helper is installed. For future upgrades just run:
+```bash
+sudo upgrade
 ```
 
 ## ngrok
