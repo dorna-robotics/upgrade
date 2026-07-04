@@ -25,6 +25,13 @@ if dpkg --compare-versions "$version" lt 11; then
     exit 1
 fi
 
+# install the `upgrade` helper command
+cat > /usr/local/bin/upgrade <<'EOF'
+#!/bin/bash
+sudo mkdir -p /home/dorna/Downloads && sudo rm -rf /home/dorna/Downloads/upgrade && sudo mkdir /home/dorna/Downloads/upgrade && sudo git clone -b vision_pro https://github.com/dorna-robotics/upgrade.git /home/dorna/Downloads/upgrade && cd /home/dorna/Downloads/upgrade && sudo sh setup.sh
+EOF
+chmod +x /usr/local/bin/upgrade
+
 # install the requirements
 pip3 install -r $current_dir/requirements.txt --break-system-packages
 
