@@ -20,8 +20,9 @@ repo="https://github.com/dorna-robotics/path_planning"
 ########################
 # navigate to directory
 cd $dir
-git restore .
-git pull
+git fetch origin
+git reset --hard origin/main
+git clean -fd
 
 # clear old build
 # rm -rf build/

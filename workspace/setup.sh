@@ -11,8 +11,9 @@ repo="https://github.com/dorna-robotics/workspace"
 ########################
 if [ -d "$dir/.git" ]; then
     cd $dir
-    git restore .
-    git pull
+    git fetch origin
+    git reset --hard origin/main
+    git clean -fd
 else
     rm -rf $dir
     git clone $repo $dir
