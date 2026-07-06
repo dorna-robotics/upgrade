@@ -11,10 +11,10 @@ branch="pro"
 ########################
 if [ -d "$dir/.git" ]; then
     cd $dir
-    git restore .
     git fetch origin
     git checkout $branch
-    git pull
+    git reset --hard origin/$branch
+    git clean -fd
 else
     rm -rf $dir
     git clone -b $branch $repo $dir
