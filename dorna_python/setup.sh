@@ -12,8 +12,9 @@ git clone $repo $dir
 
 # navigate to directory
 cd $dir
-git restore .
-git pull
+git fetch origin
+git reset --hard origin/main
+git clean -fd
 
 # install requirements
 pip3 install -r requirements.txt

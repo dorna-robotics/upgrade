@@ -12,5 +12,6 @@ repo="https://github.com/dorna-robotics/education"
 git clone $repo $dir
 # navigate to directory
 cd $dir
-git restore .
-git pull
+git fetch origin
+git reset --hard origin/main
+git clean -fd

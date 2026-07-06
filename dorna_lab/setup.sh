@@ -20,8 +20,9 @@ project_sub_dir="blockly script path_design python git"
 git clone $repo $dir
 # navigate to directory
 cd $dir
-git restore .
-git pull
+git fetch origin
+git reset --hard origin/dorna_ta
+git clean -fd
 # pip
 pip3 install -r requirements.txt
 
