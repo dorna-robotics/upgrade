@@ -39,6 +39,9 @@ systemctl enable --now mosquitto
 # install the requirements
 pip3 install -r $current_dir/requirements.txt --break-system-packages
 
+# trust repo paths regardless of owner (root vs. dorna) so git fetch/reset in sub-setups can run
+git config --global --add safe.directory '*'
+
 for val in $upgrade; do
     cd $current_dir/$val
     sh setup.sh $1
