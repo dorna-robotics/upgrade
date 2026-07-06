@@ -32,6 +32,10 @@ sudo mkdir -p /home/dorna/Downloads && sudo rm -rf /home/dorna/Downloads/upgrade
 EOF
 chmod +x /usr/local/bin/upgrade
 
+# install mosquitto (MQTT broker + clients) for device messaging
+apt install -y mosquitto mosquitto-clients
+systemctl enable --now mosquitto
+
 # install the requirements
 pip3 install -r $current_dir/requirements.txt --break-system-packages
 
