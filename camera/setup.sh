@@ -5,7 +5,7 @@ set -e
 ###################
 dir="/home/dorna/Downloads/camera"
 repo="https://github.com/dorna-robotics/camera"
-branch="main"
+branch="master"
 
 ########################
 #    clone or pull     #
