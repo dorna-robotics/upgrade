@@ -6,7 +6,7 @@ set -e
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 dir="/home/dorna/Downloads/camera"
 repo="https://github.com/dorna-robotics/camera"
-branch="main"
+branch="master"
 
 ########################
 #    clone or pull     #
