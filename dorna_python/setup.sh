@@ -5,7 +5,7 @@ set -e
 ###################
 dir="/home/dorna/Downloads/dorna_python"
 repo="https://github.com/dorna-robotics/dorna2-python.git"
-branch="main"
+branch="master"
 
 ########################
 #    clone or pull     #
