@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 ###################
 #    variables    #
 ###################
@@ -9,17 +10,22 @@ branch="pro"
 ########################
 #    clone or pull     #
 ########################
-if [ -d "$dir/.git" ]; then
-    cd $dir
-    git fetch origin
-    git checkout $branch
-    git reset --hard origin/$branch
-    git clean -fd
-else
-    rm -rf $dir
-    git clone -b $branch $repo $dir
-    cd $dir
-fi
+sync_repo() {
+    if [ -d "$dir/.git" ]; then
+        cd "$dir"
+        if git fetch origin "$branch" \
+            && git checkout -B "$branch" "origin/$branch" \
+            && git reset --hard "origin/$branch"; then
+            git clean -fd
+            return 0
+        fi
+        cd /
+    fi
+    rm -rf "$dir"
+    git clone -b "$branch" "$repo" "$dir"
+    cd "$dir"
+}
+sync_repo
 
 # install requirements (if present)
 if [ -f requirements.txt ]; then
