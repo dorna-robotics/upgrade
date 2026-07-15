@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 # keep the logs in config.log
 
@@ -9,19 +10,31 @@ current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 dir="/home/dorna/Downloads/dorna_lab"
 config="/home/dorna/Downloads/dorna_lab/dorna_lab/user_data/config.log"
 startup="/home/dorna/Downloads/dorna_lab/dorna_lab/startup.log"
-repo="-b dorna_ta https://github.com/smhty/dorna_lab.git"
+repo="https://github.com/smhty/dorna_lab.git"
+branch="dorna_ta"
 project="/home/dorna/Projects"
 project_sub_dir="blockly script path_design python git"
 
 
 ########################
-#    clone the repo    #
+#    clone or pull     #
 ########################
-git clone $repo $dir
-# navigate to directory
-cd $dir
-git restore .
-git pull
+sync_repo() {
+    if [ -d "$dir/.git" ]; then
+        cd "$dir"
+        if git fetch origin "$branch" \
+            && git checkout -B "$branch" "origin/$branch" \
+            && git reset --hard "origin/$branch"; then
+            git clean -fd
+            return 0
+        fi
+        cd /
+    fi
+    rm -rf "$dir"
+    git clone -b "$branch" "$repo" "$dir"
+    cd "$dir"
+}
+sync_repo
 # pip
 pip3 install -r requirements.txt --break-system-packages
 
@@ -36,9 +49,9 @@ python3 $dir/dorna_lab/user_data/config_init.py $value $config
 ##################################
 #    create project directory    #
 ##################################
-mkdir $project
+mkdir -p "$project"
 for val in $project_sub_dir; do
-    mkdir $project/$val
+    mkdir -p "$project/$val"
 done
 
 ########################
@@ -53,13 +66,13 @@ python3 -c 'import sys; sys.path.append(".."); import service; service.cron_add(
 ################################
 if [ -f "$startup" ]; then
     echo "startup file exists."
-else 
+else
     mv startup.sh $startup
 fi
 
 if [ -f "$project/startup.sh" ]; then
     echo "startup file exists."
-else 
+else
     mv startup.sh $project
 fi
 python3 -c 'import sys; sys.path.append(".."); import service; service.cron_add("dorna", "dorna_startup", "'$project/startup.sh'", "sh")'
