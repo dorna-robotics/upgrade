@@ -43,6 +43,15 @@ for val in $upgrade; do
     sh setup.sh $1
 done
 
+######################
+#    finalize        #
+######################
+# upgrade runs as root; restore ownership so the dorna service can write next to these files
+chown -R dorna:dorna /home/dorna/Downloads
+[ -d /home/dorna/Projects ] && chown -R dorna:dorna /home/dorna/Projects
+# purge stale bytecode so python doesn't load pre-upgrade .pyc files against fresh source
+find /home/dorna/Downloads -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+
 # remove the directory
 rm -rf $current_dir
 
