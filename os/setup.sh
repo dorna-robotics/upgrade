@@ -11,3 +11,10 @@ tee /etc/systemd/system.conf.d/10-reboot-watchdog.conf >/dev/null <<'CONF'
 RebootWatchdogSec=30s
 CONF
 systemctl daemon-reexec
+
+#####################
+#    mosquitto      #
+#####################
+# MQTT broker + clients for device messaging.
+apt install -y mosquitto mosquitto-clients
+systemctl enable --now mosquitto
