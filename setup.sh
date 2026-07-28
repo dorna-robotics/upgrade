@@ -4,7 +4,7 @@
 #    variables    #
 ###################
 # sh folders
-upgrade="dorna_python dorna_devices vision camera"
+upgrade="os dorna_python dorna_devices vision camera"
 
 # current dir
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
@@ -31,17 +31,6 @@ cat > /usr/local/bin/upgrade <<'EOF'
 sudo mkdir -p /home/dorna/Downloads && sudo rm -rf /home/dorna/Downloads/upgrade && sudo mkdir /home/dorna/Downloads/upgrade && sudo git clone -b vision_pro https://github.com/dorna-robotics/upgrade.git /home/dorna/Downloads/upgrade && cd /home/dorna/Downloads/upgrade && sudo sh setup.sh
 EOF
 chmod +x /usr/local/bin/upgrade
-
-###############################
-#    reboot watchdog timer    #
-###############################
-# systemd RebootWatchdogSec defaults to 10min; drop it to 30s so a hung reboot recovers quickly.
-install -d /etc/systemd/system.conf.d
-tee /etc/systemd/system.conf.d/10-reboot-watchdog.conf >/dev/null <<'CONF'
-[Manager]
-RebootWatchdogSec=30s
-CONF
-systemctl daemon-reexec
 
 # install the requirements
 pip3 install -r $current_dir/requirements.txt --break-system-packages
