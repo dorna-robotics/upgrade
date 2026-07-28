@@ -4,7 +4,7 @@
 #    variables    #
 ###################
 # sh folders
-upgrade="dorna_python dorna_lab vision camera education"
+upgrade="os dorna_python dorna_lab vision camera education"
 
 # current dir
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
@@ -24,17 +24,6 @@ if dpkg --compare-versions "$version" lt 11; then
 
     exit 1
 fi
-
-###############################
-#    reboot watchdog timer    #
-###############################
-# systemd RebootWatchdogSec defaults to 10min; drop it to 30s so a hung reboot recovers quickly.
-install -d /etc/systemd/system.conf.d
-tee /etc/systemd/system.conf.d/10-reboot-watchdog.conf >/dev/null <<'CONF'
-[Manager]
-RebootWatchdogSec=30s
-CONF
-systemctl daemon-reexec
 
 # install the requirements
 pip3 install -r $current_dir/requirements.txt --break-system-packages
