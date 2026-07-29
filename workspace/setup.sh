@@ -37,4 +37,5 @@ pip3 install -e . --break-system-packages
 ###########################
 # make this workspace host the site's mosquitto broker (LAN listener on 1883).
 # idempotent — only restarts mosquitto if /etc/mosquitto/conf.d/dorna-bus.conf changed.
+command -v mosquitto >/dev/null 2>&1 || apt-get install -y mosquitto
 python3 -m workspace.devices.provision_broker
