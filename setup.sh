@@ -4,7 +4,7 @@
 #    variables    #
 ###################
 # sh folders
-upgrade="os dorna_python dorna_devices workspace path_planning"
+upgrade="os dorna_python dorna_devices workspace path_planning vision_client"
 
 # current dir
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
