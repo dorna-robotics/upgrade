@@ -31,3 +31,10 @@ sync_repo
 # navigate to package and install
 cd workspace
 pip3 install -e . --break-system-packages
+
+###########################
+#    device-bus broker    #
+###########################
+# make this workspace host the site's mosquitto broker (LAN listener on 1883).
+# idempotent — only restarts mosquitto if /etc/mosquitto/conf.d/dorna-bus.conf changed.
+python3 -m workspace.devices.provision_broker
