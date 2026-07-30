@@ -32,6 +32,12 @@ if [ -f requirements.txt ]; then
     pip3 install -r requirements.txt --break-system-packages
 fi
 
+# uEye XS support: pyueye is the python wrapper; the IDS Software Suite
+# (libueye_api runtime) is a one-time manual install per unit from IDS.
+# Without the runtime the camera type is simply unavailable — the server
+# still starts and D405 cameras are unaffected.
+pip3 install pyueye --break-system-packages
+
 #################
 #    install    #
 #################
