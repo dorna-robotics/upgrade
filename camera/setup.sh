@@ -41,11 +41,18 @@ pip3 install pyueye --break-system-packages
 
 if ls "$dir"/ids/ueye-api_*.deb >/dev/null 2>&1; then
     vendored=$(basename "$dir"/ids/ueye-api_*.deb | sed 's/^ueye-api_\(.*\)_arm64\.deb$/\1/')
-    installed=$(dpkg-query -W -f='${Version}' ueye-api 2>/dev/null || true)
+    # Key the idempotency check on the DAEMON package: ueye-driver-usb
+    # Pre-Depends on a CONFIGURED ueye-common, so a single dpkg pass
+    # installs api+common but refuses the daemon — checking api would
+    # then skip forever with the daemon missing.
+    installed=$(dpkg-query -W -f='${Version}' ueye-driver-usb 2>/dev/null || true)
     if [ "$installed" != "$vendored" ]; then
         apt-get install -y libomp5 || true
+        # Two passes in dependency order: pass 1 configures api+common,
+        # pass 2 can then unpack the Pre-Depending daemon + cli tools.
         dpkg -i "$dir"/ids/ueye-api_*.deb "$dir"/ids/ueye-common_*.deb \
-                "$dir"/ids/ueye-driver-usb_*.deb "$dir"/ids/ueye-tools-cli_*.deb \
+            || apt-get install -f -y
+        dpkg -i "$dir"/ids/ueye-driver-usb_*.deb "$dir"/ids/ueye-tools-cli_*.deb \
             || apt-get install -f -y
         systemctl enable ueyeusbdrc 2>/dev/null || true
     fi
