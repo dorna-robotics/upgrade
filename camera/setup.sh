@@ -57,6 +57,21 @@ if ls "$dir"/ids/ueye-api_*.deb >/dev/null 2>&1; then
         fi
     }
     apt-get install -y libomp5 || true
+    # Repair a wedged earlier attempt first: a half-configured package
+    # (postinst died on its own leftover symlinks) blocks everything
+    # behind it. Clear the leftovers, then let dpkg finish configuring.
+    for pkg in ueye-api ueye-common ueye-driver-usb ueye-tools-cli; do
+        s=$(dpkg-query -W -f='${db:Status-Status}' "$pkg" 2>/dev/null || true)
+        case "$s" in
+            ""|installed|not-installed|config-files) ;;
+            *)
+                rm -f /opt/ids/ueye/lib/aarch64-linux-gnu/libueye_api.so.4.96 \
+                      /usr/lib/aarch64-linux-gnu/libueye_api.so*
+                dpkg --configure -a || true
+                break
+            ;;
+        esac
+    done
     ueye_install ueye-api        "$dir"/ids/ueye-api_*.deb
     ueye_install ueye-common     "$dir"/ids/ueye-common_*.deb
     ueye_install ueye-driver-usb "$dir"/ids/ueye-driver-usb_*.deb
