@@ -41,21 +41,30 @@ pip3 install pyueye --break-system-packages
 
 if ls "$dir"/ids/ueye-api_*.deb >/dev/null 2>&1; then
     vendored=$(basename "$dir"/ids/ueye-api_*.deb | sed 's/^ueye-api_\(.*\)_arm64\.deb$/\1/')
-    # Key the idempotency check on the DAEMON package: ueye-driver-usb
-    # Pre-Depends on a CONFIGURED ueye-common, so a single dpkg pass
-    # installs api+common but refuses the daemon — checking api would
-    # then skip forever with the daemon missing.
-    installed=$(dpkg-query -W -f='${Version}' ueye-driver-usb 2>/dev/null || true)
-    if [ "$installed" != "$vendored" ]; then
-        apt-get install -y libomp5 || true
-        # Two passes in dependency order: pass 1 configures api+common,
-        # pass 2 can then unpack the Pre-Depending daemon + cli tools.
-        dpkg -i "$dir"/ids/ueye-api_*.deb "$dir"/ids/ueye-common_*.deb \
-            || apt-get install -f -y
-        dpkg -i "$dir"/ids/ueye-driver-usb_*.deb "$dir"/ids/ueye-tools-cli_*.deb \
-            || apt-get install -f -y
-        systemctl enable ueyeusbdrc 2>/dev/null || true
-    fi
+    # Per-package install, in dependency order (driver-usb/tools-cli
+    # PRE-depend on a CONFIGURED ueye-common, so they must come after
+    # api+common are fully configured). Each package is touched ONLY
+    # when its version/state mismatches: the IDS postinst uses bare
+    # `ln -s` under set -e, so re-configuring an already-installed
+    # package explodes with "File exists" — never reinstall what is
+    # already correctly in place.
+    ueye_install() {
+        pkg="$1"; deb="$2"
+        v=$(dpkg-query -W -f='${Version}' "$pkg" 2>/dev/null || true)
+        s=$(dpkg-query -W -f='${db:Status-Status}' "$pkg" 2>/dev/null || true)
+        if [ "$v" != "$vendored" ] || [ "$s" != "installed" ]; then
+            dpkg -i "$deb" || apt-get install -f -y
+        fi
+    }
+    apt-get install -y libomp5 || true
+    ueye_install ueye-api        "$dir"/ids/ueye-api_*.deb
+    ueye_install ueye-common     "$dir"/ids/ueye-common_*.deb
+    ueye_install ueye-driver-usb "$dir"/ids/ueye-driver-usb_*.deb
+    ueye_install ueye-tools-cli  "$dir"/ids/ueye-tools-cli_*.deb
+    # refresh the loader cache so libueye_api resolves for pyueye even
+    # if a partial earlier attempt skipped the ldconfig trigger
+    ldconfig || true
+    systemctl enable ueyeusbdrc 2>/dev/null || true
 fi
 
 #################
