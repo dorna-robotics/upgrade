@@ -32,11 +32,24 @@ if [ -f requirements.txt ]; then
     pip3 install -r requirements.txt --break-system-packages
 fi
 
-# uEye XS support: pyueye is the python wrapper; the IDS Software Suite
-# (libueye_api runtime) is a one-time manual install per unit from IDS.
-# Without the runtime the camera type is simply unavailable — the server
-# still starts and D405 cameras are unaffected.
+# uEye XS support: pyueye (python wrapper) + the IDS uEye runtime.
+# The runtime debs are vendored in the camera repo (ids/ — login-gated
+# upstream); install is idempotent: skipped while the installed
+# ueye-api version matches the vendored one. Harmless on units with no
+# uEye plugged in — the daemon idles, D405 operation is unaffected.
 pip3 install pyueye --break-system-packages
+
+if ls "$dir"/ids/ueye-api_*.deb >/dev/null 2>&1; then
+    vendored=$(basename "$dir"/ids/ueye-api_*.deb | sed 's/^ueye-api_\(.*\)_arm64\.deb$/\1/')
+    installed=$(dpkg-query -W -f='${Version}' ueye-api 2>/dev/null || true)
+    if [ "$installed" != "$vendored" ]; then
+        apt-get install -y libomp5 || true
+        dpkg -i "$dir"/ids/ueye-api_*.deb "$dir"/ids/ueye-common_*.deb \
+                "$dir"/ids/ueye-driver-usb_*.deb "$dir"/ids/ueye-tools-cli_*.deb \
+            || apt-get install -f -y
+        systemctl enable ueyeusbdrc 2>/dev/null || true
+    fi
+fi
 
 #################
 #    install    #
