@@ -82,6 +82,59 @@ if ls "$dir"/ids/ueye-api_*.deb >/dev/null 2>&1; then
     systemctl enable ueyeusbdrc 2>/dev/null || true
 fi
 
+# Hikrobot GigE support: the MVS runtime. The Python bindings ship in
+# the camera repo (mvs/MvImport/), but they are ctypes wrappers — the
+# runtime library itself must be installed. The deb is vendored in the
+# camera repo, split in two because GitHub rejects files over 100 MB.
+#
+# IDEMPOTENT VIA A STAMP, NOT A VERSION STRING. The deb registers as
+# package `mvs` with version "2022-10-24" — nothing to do with the
+# "5.0.2" in its filename — so any filename-derived version check never
+# matches and reinstalls 110 MB on every upgrade run. The stamp records
+# the fingerprint of the vendored parts that were last installed, which
+# is both version-scheme independent and correct when the vendored deb
+# is replaced.
+if ls "$dir"/mvs/MVS-*.deb.part-* >/dev/null 2>&1; then
+    stamp="/var/lib/dorna/mvs.installed"
+    want=$(sha256sum "$dir"/mvs/MVS-*.deb.part-* | awk '{print $1}' | sha256sum | cut -d' ' -f1)
+    have=$(cat "$stamp" 2>/dev/null || true)
+    state=$(dpkg-query -W -f='${db:Status-Status}' mvs 2>/dev/null || true)
+
+    if [ "$have" != "$want" ] || [ "$state" != "installed" ]; then
+        # Reassemble beside the parts, NOT in /tmp: /tmp is tmpfs on
+        # some units and 110 MB of RAM mid-upgrade is a poor trade on a
+        # 2 GB Pi.
+        deb="$dir/mvs/.MVS-reassembled.deb"
+        cat "$dir"/mvs/MVS-*.deb.part-* > "$deb"
+        # VERIFY BEFORE INSTALLING. A truncated part — interrupted
+        # clone, partial fetch — reassembles into a deb that is merely
+        # wrong rather than obviously broken.
+        expect=$(cut -d" " -f1 "$dir"/mvs/MVS-*.deb.sha256 2>/dev/null | head -1)
+        got=$(sha256sum "$deb" | cut -d" " -f1)
+        if [ -n "$expect" ] && [ "$expect" != "$got" ]; then
+            echo "MVS: checksum mismatch, refusing to install" >&2
+            echo "  want $expect" >&2
+            echo "  got  $got" >&2
+            rm -f "$deb"
+        else
+            dpkg -i "$deb" || apt-get install -f -y
+            rm -f "$deb"
+            mkdir -p "$(dirname "$stamp")"
+            echo "$want" > "$stamp"
+        fi
+    fi
+
+    # The installer exports MVCAM_COMMON_RUNENV from /etc/profile, which
+    # ONLY login shells read — a systemd service gets nothing, and the
+    # bindings then cannot locate libMvCameraControl.so. The driver
+    # fills the variable in itself (hik_robot._posix_register_runtime_dirs);
+    # this is for anything else on the box that expects the loader path.
+    if [ -d /opt/MVS/lib/aarch64 ]; then
+        echo "/opt/MVS/lib/aarch64" > /etc/ld.so.conf.d/mvs.conf
+        ldconfig || true
+    fi
+fi
+
 #################
 #    install    #
 #################
