@@ -123,16 +123,6 @@ if ls "$dir"/mvs/MVS-*.deb.part-* >/dev/null 2>&1; then
             echo "$want" > "$stamp"
         fi
     fi
-
-    # The installer exports MVCAM_COMMON_RUNENV from /etc/profile, which
-    # ONLY login shells read — a systemd service gets nothing, and the
-    # bindings then cannot locate libMvCameraControl.so. The driver
-    # fills the variable in itself (hik_robot._posix_register_runtime_dirs);
-    # this is for anything else on the box that expects the loader path.
-    if [ -d /opt/MVS/lib/aarch64 ]; then
-        echo "/opt/MVS/lib/aarch64" > /etc/ld.so.conf.d/mvs.conf
-        ldconfig || true
-    fi
 fi
 
 #################
