@@ -9,3 +9,22 @@ After the first upgrade, the `upgrade` helper is installed. For future upgrades 
 ```bash
 sudo upgrade
 ```
+
+### Services
+
+The orchestrator (`gui/server.py`) runs as the systemd unit
+`dorna-orchestrator` (installed by `os/setup.sh`, restarted by
+`workspace/setup.sh` once the code is refreshed): supervised — restarted
+on failure — with every line in the persistent journal.
+
+```bash
+systemctl status dorna-orchestrator          # running? since when? last restart?
+journalctl -u dorna-orchestrator -n 200 -f   # the live log
+journalctl -b -1 -u dorna-orchestrator       # the previous boot's log
+```
+
+The old launch — `python3 gui/server.py >> server.log` from
+`/home/dorna/startup.sh` via root's crontab — is removed from
+`startup.sh` by the upgrade; the Jupyter line and the cron entry stay.
+Site-specific environment, if ever needed, goes in
+`/etc/default/dorna-orchestrator` (read when present).

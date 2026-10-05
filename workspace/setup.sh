@@ -39,3 +39,14 @@ pip3 install -e . --break-system-packages
 # idempotent — only restarts mosquitto if /etc/mosquitto/conf.d/dorna-bus.conf changed.
 command -v mosquitto >/dev/null 2>&1 || apt-get install -y mosquitto
 python3 -m workspace.devices.provision_broker
+
+###########################
+#    (re)start the orchestrator        #
+###########################
+# The code is in place: the legacy nohup'd server from startup.sh (if one
+# still runs — it holds :80, the unit could not bind) goes, and the unit
+# dorna-orchestrator (os/setup.sh) starts, or restarts, so the unit serves
+# THIS code now rather than the old code from memory until the reboot.
+# pkill exits 1 when nothing matches; must not trip set -e.
+pkill -f 'python3 gui/server.py' || true
+systemctl restart dorna-orchestrator || true
