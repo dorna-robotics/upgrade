@@ -47,6 +47,8 @@ python3 -m workspace.devices.provision_broker
 # still runs — it holds :80, the unit could not bind) goes, and the unit
 # dorna-orchestrator (os/setup.sh) starts, or restarts, so the unit serves
 # THIS code now rather than the old code from memory until the reboot.
-# pkill exits 1 when nothing matches; must not trip set -e.
+# Stop the unit first so the kill below never counts as a unit failure;
+# pkill exits 1 when nothing matches — none of this may trip set -e.
+systemctl stop dorna-orchestrator || true
 pkill -f 'python3 gui/server.py' || true
-systemctl restart dorna-orchestrator || true
+systemctl start dorna-orchestrator || true
