@@ -26,14 +26,15 @@ systemctl daemon-reexec
 # edited: an edit once left a half-launcher for cron to trip on at reboot
 # (10.0.1.40, 2026-10-05: "startup.sh: 13: --host: not found"). Units run
 # as root, as the old launch did (sudo set HOME=/root; the units say so).
-#   dorna-vision    python3 -m dorna_vision.server on :80 — started by vision/setup.sh
-#   dorna-jupyter   the bench's notebook on :8888 — started here
+#   dorna-vision    python3 -m dorna_vision.server on :80
+#   dorna-jupyter   the bench's notebook on :8888
+# Both are ENABLED here and STARTED by the services step at the end of
+# setup.sh, once every component is installed — and that step refuses to
+# reboot a unit whose service does not answer.
 # Site-specific environment — DEVICE_MQTT_HOST for the site's device-bus
 # broker, for one — goes in /etc/default/<unit>, read when present.
 
 # the vision server. :80 is the port the workspaces' bench.j2 files name.
-# ENABLED here, STARTED by the vision step once the package is installed:
-# a first-time upgrade has no dorna_vision yet.
 cat > /etc/systemd/system/dorna-vision.service <<'UNIT'
 [Unit]
 Description=Dorna vision server (dorna_vision.server)
@@ -82,20 +83,16 @@ install -d /var/log/journal
 systemd-tmpfiles --create --prefix /var/log/journal 2>/dev/null || true
 
 # retire the legacy launchers — not edited, ARCHIVED: the script is kept
-# as startup.sh.pre-upgrade for the record, and root's crontab loses the
-# entry that ran it. The jupyter component's cron entry in the dorna
-# user's crontab and its copied script go too (the unit owns :8888). A
-# unit with none of these is left alone; crontab exits non-zero when a
-# user has no crontab — never trips set -e.
+# as startup.sh.pre-upgrade for the record, and BOTH crontabs (root's,
+# the dorna user's — units differ in which one ran it: "# startup",
+# "# vision") lose the entry that ran it. The jupyter component's cron
+# entry and its copied script go too (the unit owns :8888). A unit with
+# none of these is left alone; crontab exits non-zero when a user has no
+# crontab — never trips set -e.
 [ -f /home/dorna/startup.sh ] && mv -f /home/dorna/startup.sh /home/dorna/startup.sh.pre-upgrade
-( crontab -l 2>/dev/null | grep -v 'startup\.sh' | crontab - ) 2>/dev/null || true
-( crontab -u dorna -l 2>/dev/null | grep -v -i 'jupyter' | crontab -u dorna - ) 2>/dev/null || true
+( crontab -l 2>/dev/null | grep -v -i -e 'startup\.sh' -e 'jupyter' | crontab - ) 2>/dev/null || true
+( crontab -u dorna -l 2>/dev/null | grep -v -i -e 'startup\.sh' -e 'jupyter' | crontab -u dorna - ) 2>/dev/null || true
 rm -rf /home/dorna/Downloads/jupyter
 
-# the units: the vision server enabled (started by vision/setup.sh);
-# Jupyter started now, after the legacy notebook (it holds :8888) is gone.
 systemctl daemon-reload
-systemctl enable dorna-vision
-pkill -f 'jupyter-notebook|jupyter notebook' || true
-systemctl enable dorna-jupyter
-systemctl restart dorna-jupyter || true
+systemctl enable dorna-vision dorna-jupyter

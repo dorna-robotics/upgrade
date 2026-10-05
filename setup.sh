@@ -41,6 +41,36 @@ for val in $upgrade; do
 done
 
 ######################
+#    services up     #
+######################
+# Every component is installed: the legacy processes go, the units start,
+# and each must ANSWER before this unit is rebooted — a unit is never
+# shipped dark (both breakages of 2026-10-05 would have stopped here).
+# The vision server may take a while to find its cameras: 120 s.
+health() {   # unit  url  seconds
+    i=0
+    while [ "$i" -lt "$3" ]; do
+        if systemctl is-active --quiet "$1" && curl -sf -m 3 -o /dev/null "$2"; then
+            echo "$1: up, answering at $2"
+            return 0
+        fi
+        sleep 2; i=$((i + 2))
+    done
+    echo "#####################################################################"
+    echo "#  $1 is NOT up after $3 s — the unit is left as it is, NO REBOOT.  #"
+    echo "#####################################################################"
+    systemctl status "$1" --no-pager 2>&1 | head -12
+    journalctl -u "$1" -n 40 --no-pager 2>&1
+    return 1
+}
+systemctl stop dorna-vision dorna-jupyter 2>/dev/null || true
+pkill -f 'dorna_vision.server' || true                 # a legacy nohup'd server holds :80
+pkill -f 'jupyter-notebook|jupyter notebook' || true   # a legacy notebook holds :8888
+systemctl start dorna-vision dorna-jupyter || true
+health dorna-vision  http://127.0.0.1/      120 || exit 1
+health dorna-jupyter http://127.0.0.1:8888/  60 || exit 1
+
+######################
 #    finalize        #
 ######################
 # upgrade runs as root; restore ownership so the dorna service can write next to these files

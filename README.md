@@ -27,6 +27,14 @@ journalctl -u dorna-vision -n 200 -f   # the live log
 journalctl -b -1 -u dorna-vision       # the previous boot's log
 ```
 
+At the end of an upgrade the units are started and each must answer
+(`systemctl is-active` and an HTTP reply) before the unit reboots; a
+unit whose service is not up is left as it is, with the service's status
+and journal printed — never shipped dark. The RealSense binding, built
+from source on a unit, is registered system-wide (a `.pth` in the system
+site dir) so the service finds it without the `PYTHONPATH` only cron used
+to carry.
+
 The legacy launchers — root's `@reboot sudo sh /home/dorna/startup.sh`
 with a nohup'd server inside, and the notebook's cron entry — are
 retired by the upgrade: the script is kept as

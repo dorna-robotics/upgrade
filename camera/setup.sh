@@ -130,3 +130,31 @@ fi
 #################
 # editable install
 pip3 install -e . --break-system-packages
+
+#######################################
+#    RealSense binding, system-wide   #
+#######################################
+# pyrealsense2 is built from source on a unit and lives only in
+# ~/Downloads/librealsense/build/Release. It reached Python through the
+# PYTHONPATH in /etc/environment — which cron applied and systemd never
+# reads, so the vision unit crash-looped on "module 'pyrealsense2' has
+# no attribute 'stream'" (10.0.1.40, 2026-10-05): with no path to the
+# real module, Python settled for the leftover
+# /usr/lib/python3/dist-packages/pyrealsense2/ of an old install, a dir
+# holding only pyrsutils, as an empty namespace package.
+# Register the binding where every Python finds it, environment or not:
+# a .pth in the system site dir. The leftover dir goes when it has no
+# pyrealsense2 .so of its own, so a missing binding fails loudly as
+# ImportError. A unit built without librealsense is left alone.
+rs_build="/home/dorna/Downloads/librealsense/build/Release"
+site_dir=$(python3 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')
+if ls "$rs_build"/pyrealsense2*.so >/dev/null 2>&1; then
+    install -d "$site_dir"
+    echo "$rs_build" > "$site_dir/librealsense.pth"
+    stale="/usr/lib/python3/dist-packages/pyrealsense2"
+    if [ -d "$stale" ] && ! ls "$stale"/pyrealsense2*.so >/dev/null 2>&1; then
+        rm -rf "$stale"
+    fi
+    # proven here, in a clean environment, or the upgrade stops here
+    env -u PYTHONPATH python3 -c 'import pyrealsense2 as rs; rs.stream; print("pyrealsense2", rs.__version__, "registered system-wide")'
+fi
