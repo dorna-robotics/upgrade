@@ -51,9 +51,27 @@ install -d /var/log/journal
 systemd-tmpfiles --create --prefix /var/log/journal 2>/dev/null || true
 
 # remove ONLY the server launch from startup.sh, where a unit has one;
-# anything else in it (Jupyter) and the cron entry stay. Idempotent: a
-# second run matches nothing; a unit without a startup.sh is left alone.
-[ -f /home/dorna/startup.sh ] && sed -i '/dorna_vision\.server/d' /home/dorna/startup.sh || true
+# anything else in it (Jupyter) and the cron entry stay. The launch may
+# span lines with backslash continuations ("exec python3 -m
+# dorna_vision.server \\" / "    --host 0.0.0.0 --port 80 … >> $LOG"):
+# join those first, drop the statement, drop any orphaned option line a
+# previous edit left (a line beginning with "--" is never a command), and
+# PROVE the result parses before it replaces the file — a half-edited
+# launcher is never left for cron to trip on at reboot (10.0.1.40,
+# 2026-10-05: "startup.sh: 13: --host: not found"). The original is kept
+# beside it as startup.sh.pre-upgrade. Idempotent: a second run finds
+# nothing to do; a unit without a startup.sh is left alone.
+if [ -f /home/dorna/startup.sh ] && grep -Eq 'dorna_vision\.server|^[[:space:]]*--[a-z]' /home/dorna/startup.sh; then
+    cp /home/dorna/startup.sh /home/dorna/startup.sh.pre-upgrade
+    sed -e ':a' -e '/\\$/N; s/\\\n[[:space:]]*/ /; ta' /home/dorna/startup.sh \
+        | sed -e '/dorna_vision\.server/d' -e '/^[[:space:]]*--[a-z]/d' > /home/dorna/startup.sh.new
+    if sh -n /home/dorna/startup.sh.new && ! grep -q 'dorna_vision\.server' /home/dorna/startup.sh.new; then
+        cat /home/dorna/startup.sh.new > /home/dorna/startup.sh
+    else
+        echo "WARNING: /home/dorna/startup.sh could not be edited cleanly — left unchanged, see startup.sh.new"
+    fi
+    rm -f /home/dorna/startup.sh.new
+fi
 
 # enabled here so it comes up on the end-of-upgrade reboot; STARTED by
 # the vision step once the package is installed (a first-time upgrade has
