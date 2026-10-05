@@ -4,7 +4,7 @@
 #    variables    #
 ###################
 # sh folders
-upgrade="os dorna_python dorna_devices vision camera jupyter"
+upgrade="os dorna_python dorna_devices vision camera"
 
 # current dir
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
@@ -31,9 +31,6 @@ cat > /usr/local/bin/upgrade <<'EOF'
 sudo mkdir -p /home/dorna/Downloads && sudo rm -rf /home/dorna/Downloads/upgrade && sudo mkdir /home/dorna/Downloads/upgrade && sudo git clone -b vision_pro https://github.com/dorna-robotics/upgrade.git /home/dorna/Downloads/upgrade && cd /home/dorna/Downloads/upgrade && sudo sh setup.sh
 EOF
 chmod +x /usr/local/bin/upgrade
-
-# install the requirements
-pip3 install -r $current_dir/requirements.txt --break-system-packages
 
 # trust repo paths regardless of owner (root vs. dorna) so git fetch/reset in sub-setups can run
 git config --global --add safe.directory '*'
