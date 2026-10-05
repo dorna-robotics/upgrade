@@ -32,9 +32,6 @@ sudo mkdir -p /home/dorna/Downloads && sudo rm -rf /home/dorna/Downloads/upgrade
 EOF
 chmod +x /usr/local/bin/upgrade
 
-# install the requirements
-pip3 install -r $current_dir/requirements.txt --break-system-packages
-
 # trust repo paths regardless of owner (root vs. dorna) so git fetch/reset in sub-setups can run
 git config --global --add safe.directory '*'
 
