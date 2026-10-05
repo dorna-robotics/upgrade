@@ -60,9 +60,26 @@ install -d /var/log/journal
 systemd-tmpfiles --create --prefix /var/log/journal 2>/dev/null || true
 
 # remove ONLY the server launch from startup.sh; the Jupyter line and the
-# cron entry stay (Jupyter is its own task). Idempotent: a second run
-# matches nothing; a unit without a startup.sh is left alone.
-[ -f /home/dorna/startup.sh ] && sed -i '/gui\/server\.py/d' /home/dorna/startup.sh || true
+# cron entry stay (Jupyter is its own task). The launch may span lines
+# with backslash continuations ("exec python3 … \\" / "    --host … >> $LOG"):
+# join those first, drop the statement, drop any orphaned option line a
+# previous edit left (a line beginning with "--" is never a command), and
+# PROVE the result parses before it replaces the file — a half-edited
+# launcher is never left for cron to trip on at reboot (the field unit
+# 10.0.1.40, 2026-10-05: "startup.sh: 13: --host: not found"). The
+# original is kept beside it as startup.sh.pre-upgrade. Idempotent: a
+# second run finds nothing to do; a unit without a startup.sh is left alone.
+if [ -f /home/dorna/startup.sh ] && grep -Eq 'gui/server\.py|^[[:space:]]*--[a-z]' /home/dorna/startup.sh; then
+    cp /home/dorna/startup.sh /home/dorna/startup.sh.pre-upgrade
+    sed -e ':a' -e '/\\$/N; s/\\\n[[:space:]]*/ /; ta' /home/dorna/startup.sh \
+        | sed -e '/gui\/server\.py/d' -e '/^[[:space:]]*--[a-z]/d' > /home/dorna/startup.sh.new
+    if sh -n /home/dorna/startup.sh.new && ! grep -q 'gui/server\.py' /home/dorna/startup.sh.new; then
+        cat /home/dorna/startup.sh.new > /home/dorna/startup.sh
+    else
+        echo "WARNING: /home/dorna/startup.sh could not be edited cleanly — left unchanged, see startup.sh.new"
+    fi
+    rm -f /home/dorna/startup.sh.new
+fi
 
 # enabled here so it comes up on the end-of-upgrade reboot; STARTED by
 # the workspace step once the code is installed (a first-time upgrade has
