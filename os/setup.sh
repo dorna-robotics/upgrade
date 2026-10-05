@@ -33,15 +33,17 @@ systemctl enable --now mosquitto
 # edited: an edit once left a half-launcher for cron to trip on at reboot
 # (10.0.1.40, 2026-10-05). Units run as root, as the old launch did
 # (sudo set HOME=/root; the units say so explicitly).
-#   dorna-orchestrator   gui/server.py on :80 — started by workspace/setup.sh
-#   dorna-jupyter        the bench's notebook on :8888 — started here
+#   dorna-orchestrator   gui/server.py on :80
+#   dorna-jupyter        the bench's notebook on :8888
+# Both are ENABLED here and STARTED by the services step at the end of
+# setup.sh, once every component is installed — and that step refuses to
+# reboot a unit whose service does not answer.
 # Site-specific environment, if ever needed, goes in
 # /etc/default/<unit>, read when present.
 
 # the orchestrator. WorkingDirectory / ExecStart follow the workspace
 # repo's layout (…/workspace/workspace, gui/server.py) — if server.py
-# moves, the unit must follow. ENABLED here, STARTED by the workspace step
-# once the code is installed: a first-time upgrade has no workspace yet.
+# moves, the unit must follow.
 cat > /etc/systemd/system/dorna-orchestrator.service <<'UNIT'
 [Unit]
 Description=Dorna Workspace orchestrator (gui/server.py)
@@ -90,18 +92,14 @@ install -d /var/log/journal
 systemd-tmpfiles --create --prefix /var/log/journal 2>/dev/null || true
 
 # retire the legacy launcher — not edited, ARCHIVED: the script is kept as
-# startup.sh.pre-upgrade for the record, and root's crontab loses the
-# entry that ran it. Any Jupyter launcher in the dorna user's crontab goes
-# too (the unit owns :8888). A unit with none of these is left alone;
-# crontab exits non-zero when a user has no crontab — never trips set -e.
+# startup.sh.pre-upgrade for the record, and BOTH crontabs (root's, the
+# dorna user's — units differ in which one ran it) lose the entry that
+# ran it, and any Jupyter launcher (the unit owns :8888). A unit with none
+# of these is left alone; crontab exits non-zero when a user has no
+# crontab — never trips set -e.
 [ -f /home/dorna/startup.sh ] && mv -f /home/dorna/startup.sh /home/dorna/startup.sh.pre-upgrade
-( crontab -l 2>/dev/null | grep -v 'startup\.sh' | crontab - ) 2>/dev/null || true
-( crontab -u dorna -l 2>/dev/null | grep -v -i 'jupyter' | crontab -u dorna - ) 2>/dev/null || true
+( crontab -l 2>/dev/null | grep -v -i -e 'startup\.sh' -e 'jupyter' | crontab - ) 2>/dev/null || true
+( crontab -u dorna -l 2>/dev/null | grep -v -i -e 'startup\.sh' -e 'jupyter' | crontab -u dorna - ) 2>/dev/null || true
 
-# the units: the orchestrator enabled (started by workspace/setup.sh);
-# Jupyter started now, after the legacy notebook (it holds :8888) is gone.
 systemctl daemon-reload
-systemctl enable dorna-orchestrator
-pkill -f 'jupyter-notebook|jupyter notebook' || true
-systemctl enable dorna-jupyter
-systemctl restart dorna-jupyter || true
+systemctl enable dorna-orchestrator dorna-jupyter

@@ -28,6 +28,11 @@ journalctl -u dorna-orchestrator -n 200 -f   # the live log
 journalctl -b -1 -u dorna-orchestrator       # the previous boot's log
 ```
 
+At the end of an upgrade the units are started and each must answer
+(`systemctl is-active` and an HTTP reply) before the unit reboots; a
+unit whose service is not up is left as it is, with the service's status
+and journal printed — never shipped dark.
+
 The legacy launcher — root's `@reboot sudo sh /home/dorna/startup.sh`
 with a nohup'd server and notebook inside — is retired by the upgrade:
 the script is kept as `/home/dorna/startup.sh.pre-upgrade` for the
