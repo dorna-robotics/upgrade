@@ -49,10 +49,10 @@ sync_repo
 # clear old build
 # rm -rf build/
 
-# make and install
-cmake --preset rpi-arm64
+# make and install — the python module for, and into, the unit's venv
+cmake --preset rpi-arm64 -DPython3_EXECUTABLE="$DORNA_VENV/bin/python3"
 cmake --build --preset build-rpi64 -j
 cmake --install build/rpi-arm64
 
 # the python side: planner.py / urdf.py import fcl and urchin
-pip3 install python-fcl urchin --break-system-packages
+pip3 install python-fcl urchin

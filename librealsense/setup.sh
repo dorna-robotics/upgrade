@@ -9,14 +9,14 @@ tag="v2.59.1"
 
 # How it is built on the Jetson. RSUSB: the kernel-patch (V4L native)
 # route does not support Orin. CUDA for the format conversions and align
-# on the GPU. The python binding installs into the system site dir, so
-# pyrealsense2 imports from any environment (systemd units included). No
+# on the GPU. The python binding builds for, and installs into, the
+# unit's venv (setup.sh's $DORNA_VENV) — systemd units included. No
 # examples, no viewer, no telemetry (ENABLE_STATS), no update check.
 flags="-DCMAKE_BUILD_TYPE=Release \
  -DFORCE_RSUSB_BACKEND=ON \
  -DBUILD_WITH_CUDA=ON -DCMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc \
- -DBUILD_PYTHON_BINDINGS=ON -DPYTHON_EXECUTABLE=/usr/bin/python3 \
- -DPYTHON_INSTALL_DIR=/usr/local/lib/python3.12/dist-packages/pyrealsense2 \
+ -DBUILD_PYTHON_BINDINGS=ON -DPYTHON_EXECUTABLE=$DORNA_VENV/bin/python3 \
+ -DPYTHON_INSTALL_DIR=$DORNA_VENV/lib/python3.12/site-packages/pyrealsense2 \
  -DBUILD_EXAMPLES=OFF -DBUILD_GRAPHICAL_EXAMPLES=OFF -DBUILD_GLSL_EXTENSIONS=OFF \
  -DBUILD_TOOLS=ON -DENABLE_STATS=OFF -DCHECK_FOR_UPDATES=OFF -DENABLE_AI_ASSISTANT=OFF"
 

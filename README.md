@@ -1,16 +1,22 @@
 ### Jetson (workspace + vision on one computer)
 
-For a Jetson Orin Nano running JetPack 6 (L4T R36). The workspace
-orchestrator and the vision server both run here, on the GPU computer —
-one unit instead of a workspace Pi and a vision Pi.
+For a Jetson Orin Nano Super running JetPack 7.2.1 (L4T R39, Ubuntu 24.04,
+Python 3.12). The workspace orchestrator and the vision server both run
+here, on the GPU computer — one unit instead of a workspace Pi and a
+vision Pi.
 
-> **Status (2026-10-28):** written and run step by step on a JetPack 6.2.1
-> unit (L4T 36.4.7); not yet run end to end. Next: move it to **JetPack
-> 7.2.1** (L4T r39, Ubuntu 24.04, Python 3.12 — pip needs
-> `--break-system-packages` again, CUDA 13, TensorRT 10.16), add the OCR
-> models' fetch (`dorna_vision.ai.fetch_ocr()`) to the vision step, and run
-> it on a fresh unit. The full picture — models, training, setup, next
-> steps: `dorna_vision` repo, `jetson` branch, `docs/jetson.md`.
+> **Status (2026-10-28):** moved to JetPack 7.2.1 — CUDA 13.2, TensorRT
+> 10.16, NVIDIA's OpenCV 4.8, one python venv; the first full run on a
+> fresh unit is in progress. Still to add: the OCR models' fetch
+> (`dorna_vision.ai.fetch_ocr()`) to the vision step. The full picture —
+> models, training, setup, next steps: `dorna_vision` repo, `jetson`
+> branch, `docs/jetson.md`.
+
+Before the first upgrade, on a freshly installed unit (user `dorna`,
+hostname `jetson`), give `dorna` passwordless sudo, as on the Pis:
+```bash
+echo "dorna ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/010_dorna-nopasswd && sudo chmod 440 /etc/sudoers.d/010_dorna-nopasswd
+```
 
 First-time upgrade (run the full command once):
 ```bash
@@ -36,6 +42,24 @@ sudo upgrade
 | `workspace` | `workspace` @ `jetson` | |
 
 numpy stays 1.x (`constraints.txt`): JetPack's OpenCV is built against it.
+
+From NVIDIA's apt repo, only what the unit uses: nvcc + the CUDA runtime,
+cuBLAS, cuSPARSE, NVRTC, TensorRT and its python binding, NVIDIA's OpenCV
+4.8 and its cv2 — not the CUDA toolkit meta-package (profilers, debugger,
+libraries nothing here uses).
+
+### Python
+
+Every python package lives in **one venv, `/opt/dorna/venv`**, created
+with `--system-site-packages` so it sees apt's TensorRT, cv2 and numpy.
+Ubuntu 24.04's own python packages belong to apt — pip cannot upgrade
+one of them — so pip never touches them: it installs into the venv,
+which shadows an apt package when a newer version is needed.
+
+The venv is first on every PATH (`/etc/environment`: ssh, logins, cron;
+`/etc/sudoers.d/020_dorna-venv`: sudo), so nothing changes in use:
+`sudo python3`, `sudo pip3 install …`, Jupyter's kernel and the services
+are all the venv's python.
 
 ### Services
 

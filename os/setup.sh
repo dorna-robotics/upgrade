@@ -25,30 +25,56 @@ mode=$(sed -n 's/^< POWER_MODEL ID=\([0-9]*\) NAME=MAXN_SUPER >.*/\1/p' /etc/nvp
 ########################
 # The JetPack 7 ISO installs the bare L4T base: the NVIDIA stack comes
 # from NVIDIA's apt repo (r39.2), only the parts this unit uses —
-#   nvidia-cuda-dev       CUDA 13 toolkit: the runtime the engines run on,
-#                         nvcc for librealsense's CUDA build
+#   cuda-nvcc-13-2        nvcc + the CUDA runtime: librealsense's CUDA
+#                         build; /usr/local/cuda
+#   libcublas-dev-13-2    cuBLAS, cuSPARSE: librealsense links them;
+#   libcusparse-dev-13-2  TensorRT loads cuBLAS
+#   cuda-nvrtc-13-2       NVRTC: TensorRT compiles kernels with it
 #   nvidia-tensorrt       TensorRT 10 — the vision models' engines
 #   python3-libnvinfer    its python binding (there is no Jetson wheel)
 #   nvidia-opencv         NVIDIA's OpenCV 4.8 (in /usr/lib, beside the
 #   libopencv-python      ISO's Ubuntu 4.6 libs) and its cv2 — 4.8 has
 #                         cv2.aruco / charuco in the main build
-# Then pip, the build tools path_planning (vcpkg) and librealsense need
-# (Ubuntu 24.04's cmake 3.28 reads their presets), libomp5 for the uEye
-# runtime, and mosquitto for the device bus.
+# The CUDA toolkit meta-package is NOT installed: it brings the
+# profilers, the debugger and a dozen libraries nothing here uses.
+# Then python's venv + headers, the build tools path_planning (vcpkg)
+# and librealsense need (Ubuntu 24.04's cmake 3.28 reads their presets),
+# libomp5 for the uEye runtime, and mosquitto for the device bus.
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
-apt-get install -y nvidia-cuda-dev nvidia-tensorrt python3-libnvinfer nvidia-opencv libopencv-python
-apt-get install -y python3-pip python3-dev build-essential cmake ninja-build pkg-config \
+apt-get install -y cuda-nvcc-13-2 libcublas-dev-13-2 libcusparse-dev-13-2 cuda-nvrtc-13-2 \
+    nvidia-tensorrt python3-libnvinfer nvidia-opencv libopencv-python
+apt-get install -y python3-venv python3-dev build-essential cmake ninja-build pkg-config \
     git curl zip unzip tar autoconf autoconf-archive automake libtool intltool gettext \
     libssl-dev libusb-1.0-0-dev libudev-dev libomp5 mosquitto mosquitto-clients
 systemctl enable --now mosquitto
 
-# proven here, or the upgrade stops here
-python3 -c 'import tensorrt, cv2; print("tensorrt", tensorrt.__version__, "| cv2", cv2.__version__)'
+#########################
+#    the python venv    #
+#########################
+# Every python package the unit installs lives in ONE venv, $DORNA_VENV
+# (setup.sh). Ubuntu 24.04's own python packages are apt's: pip cannot
+# upgrade one of them (no RECORD), so pip never touches them — it
+# installs into the venv, which sees apt's packages (TensorRT, cv2,
+# numpy) through --system-site-packages and shadows them when a newer
+# version is needed. The venv is first on every PATH — /etc/environment
+# (ssh, logins, cron) and sudo's secure_path — so `sudo python3` and
+# `sudo pip3` are the venv's, exactly as typed on the Pis. Created once;
+# pip inside it is the venv's own and kept current.
+[ -x "$DORNA_VENV/bin/python3" ] || /usr/bin/python3 -m venv --system-site-packages "$DORNA_VENV"
+pip3 install -U pip
 
-# Ubuntu 24.04's python is externally managed (PEP 668): every pip call
-# on this branch passes --break-system-packages, as on the Pis. pip,
-# setuptools and wheel stay Ubuntu's (24.0 / 68 do editable installs).
+sed -i "s#^PATH=.*#PATH=\"$DORNA_VENV/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin\"#" /etc/environment
+sudoers=$(mktemp)
+echo "Defaults secure_path=\"$DORNA_VENV/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin\"" > "$sudoers"
+visudo -cqf "$sudoers"
+install -m 440 "$sudoers" /etc/sudoers.d/020_dorna-venv
+rm -f "$sudoers"
+
+# proven here — the venv's python sees apt's NVIDIA stack — or the
+# upgrade stops here
+[ "$(command -v python3)" = "$DORNA_VENV/bin/python3" ]
+python3 -c 'import tensorrt, cv2; print("tensorrt", tensorrt.__version__, "| cv2", cv2.__version__)'
 
 ###################################
 #    the bench's services         #
@@ -57,7 +83,10 @@ python3 -c 'import tensorrt, cv2; print("tensorrt", tensorrt.__version__, "| cv2
 # supervised (restarted on failure), every line in the journal
 # (persistent, below), restarted by the component step that refreshes
 # its code. Both servers run on this one computer. Units run as root,
-# as on the Pis (sudo set HOME=/root; the units say so explicitly).
+# as on the Pis (sudo set HOME=/root; the units say so explicitly), on the
+# venv's python with the venv first on PATH — a notebook's `!pip3` or a
+# subprocess's `python3` is the venv's too (units do not read
+# /etc/environment).
 #   dorna-orchestrator   gui/server.py on :80
 #   dorna-vision         python3 -m dorna_vision.server on :4001
 #   dorna-jupyter        the bench's notebook on :8888
@@ -78,9 +107,9 @@ Wants=network-online.target
 
 [Service]
 WorkingDirectory=/home/dorna/Downloads/workspace/workspace
-Environment=HOME=/root PORT=80 PYTHONUNBUFFERED=1
+Environment=HOME=/root PATH=/opt/dorna/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin PORT=80 PYTHONUNBUFFERED=1
 EnvironmentFile=-/etc/default/dorna-orchestrator
-ExecStart=/usr/bin/python3 -u gui/server.py
+ExecStart=/opt/dorna/venv/bin/python3 -u gui/server.py
 Restart=on-failure
 RestartSec=3
 StandardOutput=journal
@@ -101,9 +130,9 @@ Wants=network-online.target
 
 [Service]
 WorkingDirectory=/home/dorna/Downloads/vision
-Environment=HOME=/root PYTHONUNBUFFERED=1
+Environment=HOME=/root PATH=/opt/dorna/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin PYTHONUNBUFFERED=1
 EnvironmentFile=-/etc/default/dorna-vision
-ExecStart=/usr/bin/python3 -u -m dorna_vision.server --host 0.0.0.0 --port 4001
+ExecStart=/opt/dorna/venv/bin/python3 -u -m dorna_vision.server --host 0.0.0.0 --port 4001
 Restart=on-failure
 RestartSec=3
 StandardOutput=journal
@@ -114,7 +143,7 @@ WantedBy=multi-user.target
 UNIT
 
 # Jupyter — the bench's notebook.
-pip3 install notebook --break-system-packages
+pip3 install notebook
 cat > /etc/systemd/system/dorna-jupyter.service <<'UNIT'
 [Unit]
 Description=Jupyter notebook for the bench (port 8888)
@@ -123,9 +152,9 @@ Wants=network-online.target
 
 [Service]
 WorkingDirectory=/home/dorna
-Environment=HOME=/root PYTHONUNBUFFERED=1
+Environment=HOME=/root PATH=/opt/dorna/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin PYTHONUNBUFFERED=1
 EnvironmentFile=-/etc/default/dorna-jupyter
-ExecStart=/usr/bin/python3 -m jupyter notebook --ip 0.0.0.0 --no-browser --port=8888 --allow-root --notebook-dir=/home/dorna/ --NotebookApp.token= --NotebookApp.password=
+ExecStart=/opt/dorna/venv/bin/python3 -m jupyter notebook --ip 0.0.0.0 --no-browser --port=8888 --allow-root --notebook-dir=/home/dorna/ --NotebookApp.token= --NotebookApp.password=
 Restart=on-failure
 RestartSec=3
 StandardOutput=journal

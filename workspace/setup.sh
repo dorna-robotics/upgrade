@@ -30,7 +30,7 @@ sync_repo
 
 # navigate to package and install
 cd workspace
-pip3 install -e . --break-system-packages
+pip3 install -e .
 
 ###########################
 #    device-bus broker    #

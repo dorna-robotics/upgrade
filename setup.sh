@@ -15,6 +15,12 @@ current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 # below honours this file.
 export PIP_CONSTRAINT="$current_dir/constraints.txt"
 
+# The unit's python: one venv, first on PATH for every step below — every
+# `python3` / `pip3` here is the venv's (os/setup.sh creates it and puts
+# it first on the unit's PATH for good).
+export DORNA_VENV="/opt/dorna/venv"
+export PATH="$DORNA_VENV/bin:$PATH"
+
 ######################
 #    check the OS    #
 ######################
