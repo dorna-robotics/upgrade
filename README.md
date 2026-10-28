@@ -4,6 +4,14 @@ For a Jetson Orin Nano running JetPack 6 (L4T R36). The workspace
 orchestrator and the vision server both run here, on the GPU computer —
 one unit instead of a workspace Pi and a vision Pi.
 
+> **Status (2026-10-28):** written and run step by step on a JetPack 6.2.1
+> unit (L4T 36.4.7); not yet run end to end. Next: move it to **JetPack
+> 7.2.1** (L4T r39, Ubuntu 24.04, Python 3.12 — pip needs
+> `--break-system-packages` again, CUDA 13, TensorRT 10.16), add the OCR
+> models' fetch (`dorna_vision.ai.fetch_ocr()`) to the vision step, and run
+> it on a fresh unit. The full picture — models, training, setup, next
+> steps: `dorna_vision` repo, `jetson` branch, `docs/jetson.md`.
+
 First-time upgrade (run the full command once):
 ```bash
 sudo mkdir -p /home/dorna/Downloads && sudo rm -rf /home/dorna/Downloads/upgrade && sudo mkdir /home/dorna/Downloads/upgrade && sudo git clone -b jetson https://github.com/dorna-robotics/upgrade.git /home/dorna/Downloads/upgrade && cd /home/dorna/Downloads/upgrade && sudo bash setup.sh
