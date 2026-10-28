@@ -6,7 +6,7 @@ set -e
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 dir="/home/dorna/Downloads/workspace"
 repo="https://github.com/dorna-robotics/workspace"
-branch="main"
+branch="jetson"
 
 ########################
 #    clone or pull     #
@@ -30,7 +30,7 @@ sync_repo
 
 # navigate to package and install
 cd workspace
-pip3 install -e . --break-system-packages
+pip3 install -e .
 
 ###########################
 #    device-bus broker    #

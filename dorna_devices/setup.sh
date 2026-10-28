@@ -29,11 +29,11 @@ sync_repo
 
 # install requirements (if present)
 if [ -f requirements.txt ]; then
-    pip3 install -r requirements.txt --break-system-packages
+    pip3 install -r requirements.txt
 fi
 
 #################
 #    install    #
 #################
 # editable install
-pip3 install -e . --break-system-packages
+pip3 install -e .

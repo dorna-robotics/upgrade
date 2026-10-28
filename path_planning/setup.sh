@@ -12,6 +12,15 @@ export PATH
 
 echo "VCPKG_ROOT=$VCPKG_ROOT"
 
+# vcpkg itself, pinned: a release tag, bootstrapped with telemetry off.
+# Re-pinned (fresh clone) only when the tag below changes.
+vcpkg_tag="2026.10.16"
+if [ "$(git -C "$VCPKG_ROOT" describe --tags --exact-match 2>/dev/null)" != "$vcpkg_tag" ]; then
+    rm -rf "$VCPKG_ROOT"
+    git clone --depth 1 -b "$vcpkg_tag" https://github.com/microsoft/vcpkg.git "$VCPKG_ROOT"
+    "$VCPKG_ROOT"/bootstrap-vcpkg.sh -disableMetrics
+fi
+
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 dir="/home/dorna/Downloads/path_planning"
 repo="https://github.com/dorna-robotics/path_planning"
@@ -44,3 +53,6 @@ sync_repo
 cmake --preset rpi-arm64
 cmake --build --preset build-rpi64 -j
 cmake --install build/rpi-arm64
+
+# the python side: planner.py / urdf.py import fcl and urchin
+pip3 install python-fcl urchin

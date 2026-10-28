@@ -3,9 +3,9 @@ set -e
 ###################
 #    variables    #
 ###################
-dir="/home/dorna/Downloads/dorna_vision"
+dir="/home/dorna/Downloads/vision"
 repo="https://github.com/dorna-robotics/dorna_vision"
-branch="pro"
+branch="jetson"
 
 ########################
 #    clone or pull     #
@@ -27,9 +27,16 @@ sync_repo() {
 }
 sync_repo
 
+# install requirements (if present)
+if [ -f requirements.txt ]; then
+    pip3 install -r requirements.txt
+fi
+
 #################
 #    install    #
 #################
-# install only the lightweight client subpackage (no torch/openvino/camera)
-cd dorna_vision-client
-pip3 install -e . --break-system-packages
+# editable install — the server, and the client the workspace imports
+# (one checkout serves both on this computer)
+pip3 install -e .
+pip3 install -e dorna_vision-client
+

@@ -3,23 +3,27 @@
 ###################
 #    variables    #
 ###################
-# sh folders
-upgrade="os dorna_python dorna_devices workspace path_planning vision_client"
+# sh folders — order matters: librealsense before camera (camera proves
+# pyrealsense2 imports), camera before vision (vision imports camera)
+upgrade="os dorna_python dorna_devices path_planning librealsense camera vision workspace"
 
 # current dir
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
+# numpy stays 1.x on the Jetson: JetPack's OpenCV (apt, 4.8) is built
+# against numpy 1.x and ortools<9.10 needs it. Every pip call below
+# honours this file.
+export PIP_CONSTRAINT="$current_dir/constraints.txt"
+
 ######################
 #    check the OS    #
 ######################
-# Get the version number from /etc/os-release
-version=$(grep -oP '(?<=VERSION_ID=").*(?=")' /etc/os-release)
-
-# Compare the version number
-if dpkg --compare-versions "$version" lt 11; then
+# The Jetson branch runs on JetPack 6 (L4T R36) — the CUDA / TensorRT
+# the vision server is built against.
+if ! grep -q "^# R36 " /etc/nv_tegra_release 2>/dev/null; then
     echo "##################################################################################################################"
-    echo "#    The Robot Operating System (OS) is outdated.                                                                #"
-    echo "#    Before proceeding, please upgrade your robot controller OS to the latest version (version 12 or higher).    #"
+    echo "#    This upgrade is for a Jetson running JetPack 6 (L4T R36).                                                   #"
+    echo "#    Flash the unit with the Dorna Jetson image before proceeding.                                               #"
     echo "##################################################################################################################"
 
     exit 1
@@ -28,7 +32,7 @@ fi
 # install the `upgrade` helper command
 cat > /usr/local/bin/upgrade <<'EOF'
 #!/bin/bash
-sudo mkdir -p /home/dorna/Downloads && sudo rm -rf /home/dorna/Downloads/upgrade && sudo mkdir /home/dorna/Downloads/upgrade && sudo git clone -b workspace https://github.com/dorna-robotics/upgrade.git /home/dorna/Downloads/upgrade && cd /home/dorna/Downloads/upgrade && sudo bash setup.sh
+sudo mkdir -p /home/dorna/Downloads && sudo rm -rf /home/dorna/Downloads/upgrade && sudo mkdir /home/dorna/Downloads/upgrade && sudo git clone -b jetson https://github.com/dorna-robotics/upgrade.git /home/dorna/Downloads/upgrade && cd /home/dorna/Downloads/upgrade && sudo bash setup.sh
 EOF
 chmod +x /usr/local/bin/upgrade
 
@@ -43,9 +47,11 @@ done
 ######################
 #    services up     #
 ######################
-# Every component is installed: the legacy processes go, the units start,
-# and each must ANSWER before this unit is rebooted — a unit is never
-# shipped dark (the breakages of 2026-10-05 would have stopped here).
+# Every component is installed: the units start, and each must ANSWER
+# before this unit is rebooted — a unit is never shipped dark. Both
+# servers live on this one computer: the orchestrator on :80, the vision
+# server on :4001 (the port the workspace's j2 default names). The
+# vision server may take a while to find its cameras: 120 s.
 health() {   # unit  url  seconds
     i=0
     while [ "$i" -lt "$3" ]; do
@@ -62,12 +68,10 @@ health() {   # unit  url  seconds
     journalctl -u "$1" -n 40 --no-pager 2>&1
     return 1
 }
-systemctl stop dorna-orchestrator dorna-jupyter 2>/dev/null || true
-pkill -f 'python3 gui/server.py' || true               # a legacy nohup'd server holds :80
-pkill -f 'jupyter-notebook|jupyter notebook' || true   # a legacy notebook holds :8888
-systemctl start dorna-orchestrator dorna-jupyter || true
+systemctl restart dorna-orchestrator dorna-vision dorna-jupyter || true
 health dorna-orchestrator http://127.0.0.1/vendor/base.css 90 || exit 1
-health dorna-jupyter      http://127.0.0.1:8888/        60 || exit 1
+health dorna-vision       http://127.0.0.1:4001/          120 || exit 1
+health dorna-jupyter      http://127.0.0.1:8888/           60 || exit 1
 
 ######################
 #    finalize        #
@@ -85,7 +89,7 @@ rm -rf $current_dir
 echo "Cleaning the buffer..."
 sleep 30
 
-# shutdown 
+# shutdown
 echo "###################################################"
 echo "#    Setup process is now finished.               #"
 echo "#    To finalize the update, follow these steps:  #"

@@ -12,12 +12,33 @@ RebootWatchdogSec=30s
 CONF
 systemctl daemon-reexec
 
-#####################
-#    mosquitto      #
-#####################
-# MQTT broker + clients for device messaging.
-apt install -y mosquitto mosquitto-clients
+###########################
+#    power: MAXN SUPER    #
+###########################
+# The Orin Nano Super's full clocks. Looked up by name — the mode ID
+# differs between boards. nvpmodel keeps the mode across reboots.
+mode=$(sed -n 's/^< POWER_MODEL ID=\([0-9]*\) NAME=MAXN_SUPER >.*/\1/p' /etc/nvpmodel.conf)
+[ -n "$mode" ] && nvpmodel -m "$mode"
+
+########################
+#    system packages   #
+########################
+# JetPack ships no pip and an Ubuntu 22.04 toolchain: pip, the build
+# tools path_planning (vcpkg) and librealsense need, libomp5 for the
+# uEye runtime, and mosquitto for the device bus.
+export DEBIAN_FRONTEND=noninteractive
+apt-get update
+apt-get install -y python3-pip python3-dev build-essential ninja-build pkg-config \
+    git curl zip unzip tar autoconf autoconf-archive automake libtool intltool gettext \
+    libssl-dev libusb-1.0-0-dev libudev-dev libomp5 mosquitto mosquitto-clients
 systemctl enable --now mosquitto
+
+# Ubuntu's pip (22.0) builds in isolation without PEP 660, so its
+# setuptools cannot do editable installs; path_planning's presets need
+# CMake >= 3.24 (Ubuntu has 3.22). pip's cmake lands in /usr/local/bin,
+# ahead of /usr/bin. Ubuntu 22.04's python is not externally managed:
+# no --break-system-packages anywhere on this branch.
+pip3 install -U pip setuptools wheel cmake
 
 ###################################
 #    the bench's services         #
@@ -25,17 +46,12 @@ systemctl enable --now mosquitto
 # Everything a unit runs at boot is a systemd unit the upgrade owns —
 # supervised (restarted on failure), every line in the journal
 # (persistent, below), restarted by the component step that refreshes
-# its code. Nothing is launched from a hand-made startup script any more:
-# the legacy launcher (root's "@reboot sudo sh /home/dorna/startup.sh"
-# and the script, a nohup'd server with its stdout block-buffered into an
-# ever-growing log, lost on SIGTERM, unsupervised, serving pre-upgrade
-# code from memory after a git reset) is RETIRED below — archived, never
-# edited: an edit once left a half-launcher for cron to trip on at reboot
-# (10.0.1.40, 2026-10-05). Units run as root, as the old launch did
-# (sudo set HOME=/root; the units say so explicitly).
+# its code. Both servers run on this one computer. Units run as root,
+# as on the Pis (sudo set HOME=/root; the units say so explicitly).
 #   dorna-orchestrator   gui/server.py on :80
+#   dorna-vision         python3 -m dorna_vision.server on :4001
 #   dorna-jupyter        the bench's notebook on :8888
-# Both are ENABLED here and STARTED by the services step at the end of
+# All are ENABLED here and STARTED by the services step at the end of
 # setup.sh, once every component is installed — and that step refuses to
 # reboot a unit whose service does not answer.
 # Site-specific environment, if ever needed, goes in
@@ -47,11 +63,10 @@ systemctl enable --now mosquitto
 cat > /etc/systemd/system/dorna-orchestrator.service <<'UNIT'
 [Unit]
 Description=Dorna Workspace orchestrator (gui/server.py)
-After=network-online.target
+After=network-online.target mosquitto.service
 Wants=network-online.target
 
 [Service]
-# Runs as root today (binds :80); kept to minimise change.
 WorkingDirectory=/home/dorna/Downloads/workspace/workspace
 Environment=HOME=/root PORT=80 PYTHONUNBUFFERED=1
 EnvironmentFile=-/etc/default/dorna-orchestrator
@@ -65,8 +80,31 @@ StandardError=journal
 WantedBy=multi-user.target
 UNIT
 
-# Jupyter — the same notebook the units ran from the launcher, now a unit.
-pip3 install notebook --break-system-packages
+# the vision server. :4001 — the orchestrator holds :80 on this computer,
+# and 4001 is the vision port the workspace's j2 default names. The
+# device bus is the local mosquitto (DEVICE_MQTT_HOST defaults to localhost).
+cat > /etc/systemd/system/dorna-vision.service <<'UNIT'
+[Unit]
+Description=Dorna vision server (dorna_vision.server)
+After=network-online.target mosquitto.service
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/home/dorna/Downloads/vision
+Environment=HOME=/root PYTHONUNBUFFERED=1
+EnvironmentFile=-/etc/default/dorna-vision
+ExecStart=/usr/bin/python3 -u -m dorna_vision.server --host 0.0.0.0 --port 4001
+Restart=on-failure
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+
+# Jupyter — the bench's notebook.
+pip3 install notebook
 cat > /etc/systemd/system/dorna-jupyter.service <<'UNIT'
 [Unit]
 Description=Jupyter notebook for the bench (port 8888)
@@ -91,15 +129,5 @@ UNIT
 install -d /var/log/journal
 systemd-tmpfiles --create --prefix /var/log/journal 2>/dev/null || true
 
-# retire the legacy launcher — not edited, ARCHIVED: the script is kept as
-# startup.sh.pre-upgrade for the record, and BOTH crontabs (root's, the
-# dorna user's — units differ in which one ran it) lose the entry that
-# ran it, and any Jupyter launcher (the unit owns :8888). A unit with none
-# of these is left alone; crontab exits non-zero when a user has no
-# crontab — never trips set -e.
-[ -f /home/dorna/startup.sh ] && mv -f /home/dorna/startup.sh /home/dorna/startup.sh.pre-upgrade
-( crontab -l 2>/dev/null | grep -v -i -e 'startup\.sh' -e 'jupyter' | crontab - ) 2>/dev/null || true
-( crontab -u dorna -l 2>/dev/null | grep -v -i -e 'startup\.sh' -e 'jupyter' | crontab -u dorna - ) 2>/dev/null || true
-
 systemctl daemon-reload
-systemctl enable dorna-orchestrator dorna-jupyter
+systemctl enable dorna-orchestrator dorna-vision dorna-jupyter
