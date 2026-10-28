@@ -23,22 +23,32 @@ mode=$(sed -n 's/^< POWER_MODEL ID=\([0-9]*\) NAME=MAXN_SUPER >.*/\1/p' /etc/nvp
 ########################
 #    system packages   #
 ########################
-# JetPack ships no pip and an Ubuntu 22.04 toolchain: pip, the build
-# tools path_planning (vcpkg) and librealsense need, libomp5 for the
-# uEye runtime, and mosquitto for the device bus.
+# The JetPack 7 ISO installs the bare L4T base: the NVIDIA stack comes
+# from NVIDIA's apt repo (r39.2), only the parts this unit uses —
+#   nvidia-cuda-dev       CUDA 13 toolkit: the runtime the engines run on,
+#                         nvcc for librealsense's CUDA build
+#   nvidia-tensorrt       TensorRT 10 — the vision models' engines
+#   python3-libnvinfer    its python binding (there is no Jetson wheel)
+#   nvidia-opencv         NVIDIA's OpenCV 4.8 (in /usr/lib, beside the
+#   libopencv-python      ISO's Ubuntu 4.6 libs) and its cv2 — 4.8 has
+#                         cv2.aruco / charuco in the main build
+# Then pip, the build tools path_planning (vcpkg) and librealsense need
+# (Ubuntu 24.04's cmake 3.28 reads their presets), libomp5 for the uEye
+# runtime, and mosquitto for the device bus.
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
-apt-get install -y python3-pip python3-dev build-essential ninja-build pkg-config \
+apt-get install -y nvidia-cuda-dev nvidia-tensorrt python3-libnvinfer nvidia-opencv libopencv-python
+apt-get install -y python3-pip python3-dev build-essential cmake ninja-build pkg-config \
     git curl zip unzip tar autoconf autoconf-archive automake libtool intltool gettext \
     libssl-dev libusb-1.0-0-dev libudev-dev libomp5 mosquitto mosquitto-clients
 systemctl enable --now mosquitto
 
-# Ubuntu's pip (22.0) builds in isolation without PEP 660, so its
-# setuptools cannot do editable installs; path_planning's presets need
-# CMake >= 3.24 (Ubuntu has 3.22). pip's cmake lands in /usr/local/bin,
-# ahead of /usr/bin. Ubuntu 22.04's python is not externally managed:
-# no --break-system-packages anywhere on this branch.
-pip3 install -U pip setuptools wheel cmake
+# proven here, or the upgrade stops here
+python3 -c 'import tensorrt, cv2; print("tensorrt", tensorrt.__version__, "| cv2", cv2.__version__)'
+
+# Ubuntu 24.04's python is externally managed (PEP 668): every pip call
+# on this branch passes --break-system-packages, as on the Pis. pip,
+# setuptools and wheel stay Ubuntu's (24.0 / 68 do editable installs).
 
 ###################################
 #    the bench's services         #
@@ -104,7 +114,7 @@ WantedBy=multi-user.target
 UNIT
 
 # Jupyter — the bench's notebook.
-pip3 install notebook
+pip3 install notebook --break-system-packages
 cat > /etc/systemd/system/dorna-jupyter.service <<'UNIT'
 [Unit]
 Description=Jupyter notebook for the bench (port 8888)

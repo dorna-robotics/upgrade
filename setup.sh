@@ -11,18 +11,18 @@ upgrade="os dorna_python dorna_devices path_planning librealsense camera vision 
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 # numpy stays 1.x on the Jetson: JetPack's OpenCV (apt, 4.8) is built
-# against numpy 1.x and ortools<9.10 needs it. Every pip call below
-# honours this file.
+# against Ubuntu's numpy 1.26 and ortools<9.10 needs it. Every pip call
+# below honours this file.
 export PIP_CONSTRAINT="$current_dir/constraints.txt"
 
 ######################
 #    check the OS    #
 ######################
-# The Jetson branch runs on JetPack 6 (L4T R36) — the CUDA / TensorRT
+# The Jetson branch runs on JetPack 7 (L4T R39) — the CUDA / TensorRT
 # the vision server is built against.
-if ! grep -q "^# R36 " /etc/nv_tegra_release 2>/dev/null; then
+if ! grep -q "^# R39 " /etc/nv_tegra_release 2>/dev/null; then
     echo "##################################################################################################################"
-    echo "#    This upgrade is for a Jetson running JetPack 6 (L4T R36).                                                   #"
+    echo "#    This upgrade is for a Jetson running JetPack 7 (L4T R39).                                                   #"
     echo "#    Flash the unit with the Dorna Jetson image before proceeding.                                               #"
     echo "##################################################################################################################"
 

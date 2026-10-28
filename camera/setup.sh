@@ -29,7 +29,7 @@ sync_repo
 
 # install requirements (if present)
 if [ -f requirements.txt ]; then
-    pip3 install -r requirements.txt
+    pip3 install -r requirements.txt --break-system-packages
 fi
 
 # uEye XS support: pyueye (python wrapper) + the IDS uEye runtime.
@@ -37,7 +37,7 @@ fi
 # upstream); install is idempotent: skipped while the installed
 # ueye-api version matches the vendored one. Harmless on units with no
 # uEye plugged in — the daemon idles, D405 operation is unaffected.
-pip3 install pyueye
+pip3 install pyueye --break-system-packages
 
 if ls "$dir"/ids/ueye-api_*.deb >/dev/null 2>&1; then
     vendored=$(basename "$dir"/ids/ueye-api_*.deb | sed 's/^ueye-api_\(.*\)_arm64\.deb$/\1/')
@@ -129,5 +129,5 @@ fi
 #    install    #
 #################
 # editable install
-pip3 install -e .
+pip3 install -e . --break-system-packages
 

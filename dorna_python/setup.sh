@@ -28,10 +28,10 @@ sync_repo() {
 sync_repo
 
 # install requirements
-pip3 install -r requirements.txt
+pip3 install -r requirements.txt --break-system-packages
 
 #################
 #    install    #
 #################
 # editable install
-pip3 install -e .
+pip3 install -e . --break-system-packages

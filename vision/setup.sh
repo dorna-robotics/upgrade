@@ -29,7 +29,7 @@ sync_repo
 
 # install requirements (if present)
 if [ -f requirements.txt ]; then
-    pip3 install -r requirements.txt
+    pip3 install -r requirements.txt --break-system-packages
 fi
 
 #################
@@ -37,6 +37,6 @@ fi
 #################
 # editable install — the server, and the client the workspace imports
 # (one checkout serves both on this computer)
-pip3 install -e .
-pip3 install -e dorna_vision-client
+pip3 install -e . --break-system-packages
+pip3 install -e dorna_vision-client --break-system-packages
 

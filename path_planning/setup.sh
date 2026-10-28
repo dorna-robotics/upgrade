@@ -55,4 +55,4 @@ cmake --build --preset build-rpi64 -j
 cmake --install build/rpi-arm64
 
 # the python side: planner.py / urdf.py import fcl and urchin
-pip3 install python-fcl urchin
+pip3 install python-fcl urchin --break-system-packages
