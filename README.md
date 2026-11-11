@@ -39,3 +39,30 @@ the script is kept as `/home/dorna/startup.sh.pre-upgrade` for the
 record, the cron entry is removed, and so is any Jupyter launcher in the
 `dorna` user's crontab. Site-specific environment, if ever needed, goes
 in `/etc/default/<unit>` (read when present).
+
+### The record — the admin's System page
+
+Every upgrade writes `/var/lib/dorna/upgrade.json`: when it started and
+ended, how (`finished` — the reboot was reached — or `stopped` and why),
+and one entry per part, in the order of `$upgrade` in `setup.sh`:
+
+```json
+{"name": "workspace", "label": "Workspace", "dir": "/home/dorna/Downloads/workspace",
+ "repo": "https://github.com/dorna-robotics/workspace", "branch": "main",
+ "commit": "5a1a31be…", "exit": 0}
+```
+
+Each part writes its own entry: its `setup.sh` declares `label` (and, if
+it installs a repo, `dir`, `repo`, `branch` — as before) and ends with
+
+```bash
+[ -z "${DORNA_UPGRADE_HOME:-}" ] || . "$DORNA_UPGRADE_HOME/lib/record.sh"
+```
+
+`setup.sh` gathers the entries with each part's exit code, and prints
+`==> <part>` before each part (then `==> services`, `==> reboot`) — the
+System page's progress. **To add a part:** a folder with its `setup.sh`
+(those variables + that last line), and its name in `$upgrade`. The
+workspace's System page lists it after the next upgrade; nothing there
+names a part. Run by hand, a part's `setup.sh` records nothing.
+

@@ -16,6 +16,7 @@ current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 dir="/home/dorna/Downloads/path_planning"
 repo="https://github.com/dorna-robotics/path_planning"
 branch="main"
+label="Path planning"            # the name the upgrade's record shows (lib/record.sh)
 
 ########################
 #    clone or pull     #
@@ -44,3 +45,9 @@ sync_repo
 cmake --preset rpi-arm64
 cmake --build --preset build-rpi64 -j
 cmake --install build/rpi-arm64
+
+#####################
+#    the record     #
+#####################
+# this part, as installed, in the upgrade's record (lib/record.sh)
+[ -z "${DORNA_UPGRADE_HOME:-}" ] || . "$DORNA_UPGRADE_HOME/lib/record.sh"

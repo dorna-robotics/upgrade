@@ -1,5 +1,7 @@
 #!/bin/bash
 set -e
+# the name the upgrade's record shows (lib/record.sh)
+label="OS"
 
 ###############################
 #    reboot watchdog timer    #
@@ -103,3 +105,9 @@ systemd-tmpfiles --create --prefix /var/log/journal 2>/dev/null || true
 
 systemctl daemon-reload
 systemctl enable dorna-orchestrator dorna-jupyter
+
+#####################
+#    the record     #
+#####################
+# this part, as installed, in the upgrade's record (lib/record.sh)
+[ -z "${DORNA_UPGRADE_HOME:-}" ] || . "$DORNA_UPGRADE_HOME/lib/record.sh"
