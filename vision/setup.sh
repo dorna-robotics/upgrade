@@ -35,6 +35,6 @@ fi
 #################
 #    install    #
 #################
-# editable install
-pip3 install -e . --break-system-packages
+# editable install, with the Pi's ML engine (OpenVINO — the package's `pi` extra)
+pip3 install -e ".[pi]" --break-system-packages
 
