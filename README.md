@@ -5,12 +5,14 @@ Python 3.12). The workspace orchestrator and the vision server both run
 here, on the GPU computer — one unit instead of a workspace Pi and a
 vision Pi.
 
-> **Status (2026-10-28):** moved to JetPack 7.2.1 — CUDA 13.2, TensorRT
-> 10.16, NVIDIA's OpenCV 4.8, one python venv; the first full run on a
-> fresh unit is in progress. Still to add: the OCR models' fetch
-> (`dorna_vision.ai.fetch_ocr()`) to the vision step. The full picture —
-> models, training, setup, next steps: `dorna_vision` repo, `jetson`
-> branch, `docs/jetson.md`.
+**The same code as the Pis.** Every repo installs the branch a Pi
+installs (vision `pro`, workspace `main`, …); only the install differs —
+this branch: JetPack's NVIDIA stack, one venv, librealsense with CUDA,
+and the vision package's `jetson` extra (TensorRT) where the Pi installs
+its `pi` extra (OpenVINO). Keep it merged with the `workspace` branch
+(`git merge origin/workspace`): a change to how the Pis install the
+shared parts reaches the Jetson that way. The vision models, training and
+Jetson specifics: `dorna_vision` repo, `pro` branch, `docs/ml-engines.md`.
 
 Before the first upgrade, on a freshly installed unit (user `dorna`,
 hostname `jetson`), give `dorna` passwordless sudo, as on the Pis:
@@ -32,14 +34,14 @@ sudo upgrade
 
 | component | source | notes |
 |---|---|---|
-| `os` | apt + pip | build tools, mosquitto, current pip/setuptools/cmake, MAXN SUPER power mode, the units |
+| `os` | apt | the NVIDIA stack (below), the venv, build tools, mosquitto, MAXN SUPER power mode, the units |
 | `dorna_python` | `dorna2-python` @ `master` | |
 | `dorna_devices` | `dorna_devices` @ `main` | |
 | `path_planning` | `path_planning` @ `main` | vcpkg pinned to a release tag, telemetry off; `python-fcl`, `urchin` |
 | `librealsense` | `librealsense` @ pinned tag | RSUSB + CUDA + python binding; rebuilt only when the tag or flags change |
 | `camera` | `camera` @ `master` | RealSense, IDS uEye, Hikrobot MVS |
-| `vision` | `dorna_vision` @ `jetson` | the server and the client, one checkout |
-| `workspace` | `workspace` @ `jetson` | |
+| `vision` | `dorna_vision` @ `pro` | the server with its `jetson` extra (TensorRT) and the client, one checkout; the OCR models fetched and their engines built (once) |
+| `workspace` | `workspace` @ `main` | |
 
 numpy stays 1.x (`constraints.txt`): JetPack's OpenCV is built against it.
 
@@ -85,3 +87,30 @@ At the end of an upgrade the units are started and each must answer
 unit whose service is not up is left as it is, with the service's status
 and journal printed — never shipped dark. Site-specific environment, if
 ever needed, goes in `/etc/default/<unit>` (read when present).
+
+### The record — the admin's System page
+
+Every upgrade writes `/var/lib/dorna/upgrade.json`: when it started and
+ended, how (`finished` — the reboot was reached — or `stopped` and why),
+and one entry per part, in the order of `$upgrade` in `setup.sh`:
+
+```json
+{"name": "workspace", "label": "Workspace", "dir": "/home/dorna/Downloads/workspace",
+ "repo": "https://github.com/dorna-robotics/workspace", "branch": "main",
+ "commit": "5a1a31be…", "exit": 0}
+```
+
+Each part writes its own entry: its `setup.sh` declares `label` (and, if
+it installs a repo, `dir`, `repo`, `branch` — as before) and ends with
+
+```bash
+[ -z "${DORNA_UPGRADE_HOME:-}" ] || . "$DORNA_UPGRADE_HOME/lib/record.sh"
+```
+
+`setup.sh` gathers the entries with each part's exit code, and prints
+`==> <part>` before each part (then `==> services`, `==> reboot`) — the
+System page's progress. **To add a part:** a folder with its `setup.sh`
+(those variables + that last line), and its name in `$upgrade`. The
+workspace's System page lists it after the next upgrade; nothing there
+names a part. Run by hand, a part's `setup.sh` records nothing.
+

@@ -25,6 +25,7 @@ current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 dir="/home/dorna/Downloads/path_planning"
 repo="https://github.com/dorna-robotics/path_planning"
 branch="main"
+label="Path planning"            # the name the upgrade's record shows (lib/record.sh)
 
 ########################
 #    clone or pull     #
@@ -56,3 +57,9 @@ cmake --install build/rpi-arm64
 
 # the python side: planner.py / urdf.py import fcl and urchin
 pip3 install python-fcl urchin
+
+#####################
+#    the record     #
+#####################
+# this part, as installed, in the upgrade's record (lib/record.sh)
+[ -z "${DORNA_UPGRADE_HOME:-}" ] || . "$DORNA_UPGRADE_HOME/lib/record.sh"

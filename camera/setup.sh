@@ -6,6 +6,7 @@ set -e
 dir="/home/dorna/Downloads/camera"
 repo="https://github.com/dorna-robotics/camera"
 branch="master"
+label="Cameras"            # the name the upgrade's record shows (lib/record.sh)
 
 ########################
 #    clone or pull     #
@@ -131,3 +132,8 @@ fi
 # editable install
 pip3 install -e .
 
+#####################
+#    the record     #
+#####################
+# this part, as installed, in the upgrade's record (lib/record.sh)
+[ -z "${DORNA_UPGRADE_HOME:-}" ] || . "$DORNA_UPGRADE_HOME/lib/record.sh"

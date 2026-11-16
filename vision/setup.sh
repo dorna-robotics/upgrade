@@ -5,7 +5,8 @@ set -e
 ###################
 dir="/home/dorna/Downloads/vision"
 repo="https://github.com/dorna-robotics/dorna_vision"
-branch="jetson"
+branch="pro"
+label="Vision"            # the name the upgrade's record shows (lib/record.sh)
 
 ########################
 #    clone or pull     #
@@ -35,8 +36,18 @@ fi
 #################
 #    install    #
 #################
-# editable install — the server, and the client the workspace imports
-# (one checkout serves both on this computer)
-pip3 install -e .
+# editable install — the server with the Jetson's engine (TensorRT), and
+# the client the workspace imports (one checkout serves both on this
+# computer)
+pip3 install -e ".[jetson]"
 pip3 install -e dorna_vision-client
 
+# the OCR models: downloaded (pinned, checksum verified) and their
+# TensorRT engines built — once per unit; after that, nothing
+python3 -c 'from dorna_vision.ai import fetch_ocr; print("ocr", fetch_ocr())'
+
+#####################
+#    the record     #
+#####################
+# this part, as installed, in the upgrade's record (lib/record.sh)
+[ -z "${DORNA_UPGRADE_HOME:-}" ] || . "$DORNA_UPGRADE_HOME/lib/record.sh"

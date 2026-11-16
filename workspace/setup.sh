@@ -6,7 +6,8 @@ set -e
 current_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 dir="/home/dorna/Downloads/workspace"
 repo="https://github.com/dorna-robotics/workspace"
-branch="jetson"
+branch="main"
+label="Workspace"            # the name the upgrade's record shows (lib/record.sh)
 
 ########################
 #    clone or pull     #
@@ -40,3 +41,8 @@ pip3 install -e .
 command -v mosquitto >/dev/null 2>&1 || apt-get install -y mosquitto
 python3 -m workspace.devices.provision_broker
 
+#####################
+#    the record     #
+#####################
+# this part, as installed, in the upgrade's record (lib/record.sh)
+[ -z "${DORNA_UPGRADE_HOME:-}" ] || . "$DORNA_UPGRADE_HOME/lib/record.sh"

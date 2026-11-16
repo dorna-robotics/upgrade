@@ -6,6 +6,7 @@ set -e
 dir="/home/dorna/Downloads/dorna_devices"
 repo="https://github.com/dorna-robotics/dorna_devices.git"
 branch="main"
+label="Devices"            # the name the upgrade's record shows (lib/record.sh)
 
 ########################
 #    clone or pull     #
@@ -37,3 +38,9 @@ fi
 #################
 # editable install
 pip3 install -e .
+
+#####################
+#    the record     #
+#####################
+# this part, as installed, in the upgrade's record (lib/record.sh)
+[ -z "${DORNA_UPGRADE_HOME:-}" ] || . "$DORNA_UPGRADE_HOME/lib/record.sh"

@@ -6,6 +6,8 @@ set -e
 dir="/home/dorna/Downloads/librealsense"
 repo="https://github.com/IntelRealSense/librealsense.git"
 tag="v2.59.1"
+branch="$tag"                    # the ref the record shows: the pinned tag
+label="RealSense library"        # the name the upgrade's record shows (lib/record.sh)
 
 # How it is built on the Jetson. RSUSB: the kernel-patch (V4L native)
 # route does not support Orin. CUDA for the format conversions and align
@@ -61,3 +63,9 @@ udevadm control --reload-rules
 # proven here, in a clean environment, or the upgrade stops here
 cd /
 env -u PYTHONPATH python3 -c 'import pyrealsense2 as rs; rs.stream; print("pyrealsense2", rs.__version__)'
+
+#####################
+#    the record     #
+#####################
+# this part, as installed, in the upgrade's record (lib/record.sh)
+[ -z "${DORNA_UPGRADE_HOME:-}" ] || . "$DORNA_UPGRADE_HOME/lib/record.sh"
