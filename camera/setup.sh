@@ -40,6 +40,12 @@ fi
 # uEye plugged in — the daemon idles, D405 operation is unaffected.
 pip3 install pyueye
 
+# Luxonis OAK support (OAK-1 W, ...): depthai, Luxonis's own pip package —
+# it carries the camera firmware it boots over USB, nothing else to
+# install. Pinned: the camera repo's Oak driver is written against the
+# depthai 3 API. Harmless on units with no OAK plugged in.
+pip3 install "depthai==3.12.1"
+
 if ls "$dir"/ids/ueye-api_*.deb >/dev/null 2>&1; then
     vendored=$(basename "$dir"/ids/ueye-api_*.deb | sed 's/^ueye-api_\(.*\)_arm64\.deb$/\1/')
     # Per-package install, in dependency order (driver-usb/tools-cli
