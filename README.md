@@ -40,6 +40,20 @@ record, the cron entry is removed, and so is any Jupyter launcher in the
 `dorna` user's crontab. Site-specific environment, if ever needed, goes
 in `/etc/default/<unit>` (read when present).
 
+### The unit's links
+
+`os/setup.sh` writes `/etc/dorna/links.json`: where the workspace home
+page's app cards point, declared per unit type instead of guessed in the
+page. `{host}` is the address the browser reached the page by, `{subnet}`
+its first three octets. A two-Pi unit:
+
+```json
+{"dorna_lab": "http://{subnet}.10/", "vision": "http://{subnet}.40:4001/"}
+```
+
+The vision Pi serves on :4001 (its own upgrade, branch `vision_pro`); a
+project's `scene/bench.j2` names the same port (`vision_port = 4001`).
+
 ### The record — the admin's System page
 
 Every upgrade writes `/var/lib/dorna/upgrade.json`: when it started and

@@ -106,6 +106,18 @@ systemd-tmpfiles --create --prefix /var/log/journal 2>/dev/null || true
 systemctl daemon-reload
 systemctl enable dorna-orchestrator dorna-jupyter
 
+###########################
+#    the unit's links     #
+###########################
+# Where the workspace home page's app cards point. Declared here, per unit
+# type, never guessed in the page: {host} is the address the browser reached
+# the page by, {subnet} its first three octets. A two-Pi unit: the robot
+# (Dorna Lab) at .10 and the vision Pi at .40, its server on :4001.
+install -d /etc/dorna
+cat > /etc/dorna/links.json <<'JSON'
+{"dorna_lab": "http://{subnet}.10/", "vision": "http://{subnet}.40:4001/"}
+JSON
+
 #####################
 #    the record     #
 #####################
