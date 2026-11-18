@@ -40,7 +40,7 @@ sudo upgrade
 | `path_planning` | `path_planning` @ `main` | vcpkg pinned to a release tag, telemetry off; `python-fcl`, `urchin` |
 | `librealsense` | `librealsense` @ pinned tag | RSUSB + CUDA + python binding; rebuilt only when the tag or flags change |
 | `camera` | `camera` @ `master` | RealSense, IDS uEye, Hikrobot MVS |
-| `vision` | `dorna_vision` @ `pro` | the server with its `jetson` extra (TensorRT) and the client, one checkout; the OCR models fetched and their engines built (once) |
+| `vision` | `dorna_vision` @ `pro` | the server with its `jetson` extra (TensorRT) and the client, one checkout; the built-in models (OCR, the classifier backbone) fetched and their engines built (once) |
 | `workspace` | `workspace` @ `main` | |
 
 numpy stays 1.x (`constraints.txt`): JetPack's OpenCV is built against it.

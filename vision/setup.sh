@@ -42,9 +42,10 @@ fi
 pip3 install -e ".[jetson]"
 pip3 install -e dorna_vision-client
 
-# the OCR models: downloaded (pinned, checksum verified) and their
-# TensorRT engines built — once per unit; after that, nothing
-python3 -c 'from dorna_vision.ai import fetch_ocr; print("ocr", fetch_ocr())'
+# the built-in models — OCR and the classifier backbone: downloaded
+# (pinned, checksum verified) and their TensorRT engines built — once per
+# unit; after that, nothing
+python3 -c 'from dorna_vision.ai import fetch; print("built-in models", fetch())'
 
 #####################
 #    the record     #
