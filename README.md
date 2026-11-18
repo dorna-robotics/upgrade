@@ -45,7 +45,7 @@ in `/etc/default/<unit>` (read when present).
 `os/setup.sh` writes `/etc/dorna/unit.json`, what this unit is, declared
 per unit type instead of guessed by the apps: `system` — the app that
 owns the System page (the upgrade, from the browser); `links` — where the
-workspace's Dorna Lab and Vision cards and nav item point. `{host}` is the
+workspace's Dorna Lab and Vision cards point. `{host}` is the
 address the browser reached the page by, `{subnet}` its first three
 octets. A two-Pi unit:
 

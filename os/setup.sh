@@ -112,7 +112,7 @@ systemctl enable dorna-orchestrator dorna-jupyter
 # What this unit is, for the apps that read it — declared per unit type,
 # never guessed. `system`: the app that owns the System page (the upgrade,
 # from the browser) — the workspace here. `links`: where the workspace's
-# Dorna Lab and Vision cards and nav item point; {host} is the address the
+# Dorna Lab and Vision cards point; {host} is the address the
 # browser reached the page by, {subnet} its first three octets. A two-Pi
 # unit: the robot (Dorna Lab) at .10, the vision Pi at .40 on :4001.
 install -d /etc/dorna
