@@ -106,10 +106,13 @@ systemctl enable dorna-vision dorna-jupyter
 # What this unit is, for the apps that read it: on a vision Pi the vision
 # server owns the System page (the upgrade, from the browser) — on a
 # workspace Pi or a Jetson the workspace does, and the vision server shows
-# none. Declared per unit type, never guessed.
+# none. `links`: where the vision server's Workspace card points — {subnet}
+# is the first three octets of the address the browser reached the page by.
+# A two-Pi unit: the workspace Pi at .20 (the robot at .10, this Pi at .40).
+# Declared per unit type, never guessed.
 install -d /etc/dorna
 cat > /etc/dorna/unit.json <<'JSON'
-{"system": "vision"}
+{"system": "vision", "links": {"workspace": "http://{subnet}.20/"}}
 JSON
 
 #####################

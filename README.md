@@ -56,8 +56,11 @@ It reads two files the upgrade writes:
   how it ended, and one entry per part, written by the part itself
   (`lib/record.sh`, sourced as each part's last line, from its `label`,
   `dir`, `repo`, `branch`). The list of parts lives only in `$upgrade`.
-- `/etc/dorna/unit.json` — the unit's declaration, `{"system": "vision"}`
-  (`os/setup.sh`): on this unit the vision server owns the System page.
+- `/etc/dorna/unit.json` — the unit's declaration,
+  `{"system": "vision", "links": {"workspace": "http://{subnet}.20/"}}`
+  (`os/setup.sh`): on this unit the vision server owns the System page,
+  and its Workspace card opens the workspace Pi (.20 on this unit's
+  subnet).
   A Jetson declares `"workspace"` — there the workspace's System page
   upgrades everything, the vision server's included, and the vision
   server shows none.
