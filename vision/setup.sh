@@ -6,6 +6,7 @@ set -e
 dir="/home/dorna/Downloads/vision"
 repo="https://github.com/dorna-robotics/dorna_vision"
 branch="pro"
+label="Vision"            # the name the upgrade's record shows (lib/record.sh)
 
 ########################
 #    clone or pull     #
@@ -38,3 +39,8 @@ fi
 # editable install, with the Pi's ML engine (OpenVINO — the package's `pi` extra)
 pip3 install -e ".[pi]" --break-system-packages
 
+#####################
+#    the record     #
+#####################
+# this part, as installed, in the upgrade's record (lib/record.sh)
+[ -z "${DORNA_UPGRADE_HOME:-}" ] || . "$DORNA_UPGRADE_HOME/lib/record.sh"

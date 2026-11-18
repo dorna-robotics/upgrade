@@ -6,6 +6,7 @@ set -e
 dir="/home/dorna/Downloads/camera"
 repo="https://github.com/dorna-robotics/camera"
 branch="master"
+label="Cameras"            # the name the upgrade's record shows (lib/record.sh)
 
 ########################
 #    clone or pull     #
@@ -164,3 +165,9 @@ if ls "$rs_build"/pyrealsense2*.so >/dev/null 2>&1; then
     # proven here, in a clean environment, or the upgrade stops here
     env -u PYTHONPATH python3 -c 'import pyrealsense2 as rs; rs.stream; print("pyrealsense2", rs.__version__, "registered system-wide")'
 fi
+
+#####################
+#    the record     #
+#####################
+# this part, as installed, in the upgrade's record (lib/record.sh)
+[ -z "${DORNA_UPGRADE_HOME:-}" ] || . "$DORNA_UPGRADE_HOME/lib/record.sh"

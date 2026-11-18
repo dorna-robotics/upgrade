@@ -1,5 +1,7 @@
 #!/bin/bash
 set -e
+# the name the upgrade's record shows (lib/record.sh)
+label="OS"
 
 ###############################
 #    reboot watchdog timer    #
@@ -97,3 +99,21 @@ rm -rf /home/dorna/Downloads/jupyter
 
 systemctl daemon-reload
 systemctl enable dorna-vision dorna-jupyter
+
+#############################
+#    the unit's declaration #
+#############################
+# What this unit is, for the apps that read it: on a vision Pi the vision
+# server owns the System page (the upgrade, from the browser) — on a
+# workspace Pi or a Jetson the workspace does, and the vision server shows
+# none. Declared per unit type, never guessed.
+install -d /etc/dorna
+cat > /etc/dorna/unit.json <<'JSON'
+{"system": "vision"}
+JSON
+
+#####################
+#    the record     #
+#####################
+# this part, as installed, in the upgrade's record (lib/record.sh)
+[ -z "${DORNA_UPGRADE_HOME:-}" ] || . "$DORNA_UPGRADE_HOME/lib/record.sh"

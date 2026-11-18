@@ -42,3 +42,22 @@ retired by the upgrade: the script is kept as
 are removed. Site-specific environment — `DEVICE_MQTT_HOST` for the
 site's device-bus broker, for one — goes in `/etc/default/<unit>` (read
 when present).
+
+### The System page — upgrading from the browser
+
+The vision server's **System** page (`http://<vision-pi>:4001/system`)
+shows what this unit's upgrade installed, which parts have updates, and
+runs `sudo upgrade` with its live log — through the restart and the
+reboot — as the workspace's System page does on a workspace Pi.
+
+It reads two files the upgrade writes:
+
+- `/var/lib/dorna/upgrade.json` — the record: when the last upgrade ran,
+  how it ended, and one entry per part, written by the part itself
+  (`lib/record.sh`, sourced as each part's last line, from its `label`,
+  `dir`, `repo`, `branch`). The list of parts lives only in `$upgrade`.
+- `/etc/dorna/unit.json` — the unit's declaration, `{"system": "vision"}`
+  (`os/setup.sh`): on this unit the vision server owns the System page.
+  A Jetson declares `"workspace"` — there the workspace's System page
+  upgrades everything, the vision server's included, and the vision
+  server shows none.
