@@ -88,16 +88,18 @@ unit whose service is not up is left as it is, with the service's status
 and journal printed — never shipped dark. Site-specific environment, if
 ever needed, goes in `/etc/default/<unit>` (read when present).
 
-### The unit's links
+### The unit's declaration
 
-`os/setup.sh` writes `/etc/dorna/links.json`: where the workspace home
-page's app cards point, declared per unit type instead of guessed in the
-page. `{host}` is the address the browser reached the page by, `{subnet}`
-its first three octets. This unit — the vision server on the same
-computer:
+`os/setup.sh` writes `/etc/dorna/unit.json`, what this unit is, declared
+per unit type instead of guessed by the apps: `system` — the app that
+owns the System page (the upgrade, from the browser): the workspace, which
+upgrades every part here, vision included; `links` — where the
+workspace's Dorna Lab and Vision cards and nav item point. `{host}` is the
+address the browser reached the page by, `{subnet}` its first three
+octets. This unit — the vision server on the same computer:
 
 ```json
-{"dorna_lab": "http://{subnet}.10/", "vision": "http://{host}:4001/"}
+{"system": "workspace", "links": {"dorna_lab": "http://{subnet}.10/", "vision": "http://{host}:4001/"}}
 ```
 
 A project on this unit names it in `scene/bench.j2`:
