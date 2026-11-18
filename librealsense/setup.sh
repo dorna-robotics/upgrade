@@ -5,8 +5,8 @@ set -e
 ###################
 dir="/home/dorna/Downloads/librealsense"
 repo="https://github.com/IntelRealSense/librealsense.git"
-tag="v2.59.1"
-branch="$tag"                    # the ref the record shows: the pinned tag
+tag="v2.59.1"                    # the pinned release — the record's `tag` (lib/record.sh): this
+                                 # folder is a build tree, cloned whole when the pin changes
 label="RealSense library"        # the name the upgrade's record shows (lib/record.sh)
 
 # How it is built on the Jetson. RSUSB: the kernel-patch (V4L native)
