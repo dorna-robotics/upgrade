@@ -64,10 +64,10 @@ health() {   # unit  url  seconds
     return 1
 }
 systemctl stop dorna-vision dorna-jupyter 2>/dev/null || true
-pkill -f 'dorna_vision.server' || true                 # a legacy nohup'd server holds :80
+pkill -f 'dorna_vision.server' || true                 # a legacy nohup'd server holds the cameras
 pkill -f 'jupyter-notebook|jupyter notebook' || true   # a legacy notebook holds :8888
 systemctl start dorna-vision dorna-jupyter || true
-health dorna-vision  http://127.0.0.1/      120 || exit 1
+health dorna-vision  http://127.0.0.1:4001/ 120 || exit 1
 health dorna-jupyter http://127.0.0.1:8888/  60 || exit 1
 
 ######################

@@ -18,7 +18,7 @@ unit's code restarts it.
 
 | unit | what | port |
 |---|---|---|
-| `dorna-vision` | `python3 -m dorna_vision.server`, the vision server | 80 |
+| `dorna-vision` | `python3 -m dorna_vision.server`, the vision server | 4001 |
 | `dorna-jupyter` | the bench's Jupyter notebook | 8888 |
 
 ```bash

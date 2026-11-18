@@ -26,7 +26,7 @@ systemctl daemon-reexec
 # edited: an edit once left a half-launcher for cron to trip on at reboot
 # (10.0.1.40, 2026-10-05: "startup.sh: 13: --host: not found"). Units run
 # as root, as the old launch did (sudo set HOME=/root; the units say so).
-#   dorna-vision    python3 -m dorna_vision.server on :80
+#   dorna-vision    python3 -m dorna_vision.server on :4001
 #   dorna-jupyter   the bench's notebook on :8888
 # Both are ENABLED here and STARTED by the services step at the end of
 # setup.sh, once every component is installed — and that step refuses to
@@ -34,7 +34,8 @@ systemctl daemon-reexec
 # Site-specific environment — DEVICE_MQTT_HOST for the site's device-bus
 # broker, for one — goes in /etc/default/<unit>, read when present.
 
-# the vision server. :80 is the port the workspaces' bench.j2 files name.
+# the vision server. :4001 — every vision server's port (the Jetson's too);
+# the workspaces' bench.j2 files name it (vision_port = 4001).
 cat > /etc/systemd/system/dorna-vision.service <<'UNIT'
 [Unit]
 Description=Dorna vision server (dorna_vision.server)
@@ -42,11 +43,11 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-# Runs as root today (binds :80); kept to minimise change.
+# Runs as root, as the old launch did.
 WorkingDirectory=/home/dorna/Downloads/vision
 Environment=HOME=/root PYTHONUNBUFFERED=1
 EnvironmentFile=-/etc/default/dorna-vision
-ExecStart=/usr/bin/python3 -u -m dorna_vision.server --host 0.0.0.0 --port 80
+ExecStart=/usr/bin/python3 -u -m dorna_vision.server --host 0.0.0.0 --port 4001
 Restart=on-failure
 RestartSec=3
 StandardOutput=journal
