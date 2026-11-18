@@ -88,6 +88,21 @@ unit whose service is not up is left as it is, with the service's status
 and journal printed — never shipped dark. Site-specific environment, if
 ever needed, goes in `/etc/default/<unit>` (read when present).
 
+### The unit's links
+
+`os/setup.sh` writes `/etc/dorna/links.json`: where the workspace home
+page's app cards point, declared per unit type instead of guessed in the
+page. `{host}` is the address the browser reached the page by, `{subnet}`
+its first three octets. This unit — the vision server on the same
+computer:
+
+```json
+{"dorna_lab": "http://{subnet}.10/", "vision": "http://{host}:4001/"}
+```
+
+A project on this unit names it in `scene/bench.j2`:
+`vision_ip = "127.0.0.1"`, `vision_port = 4001`.
+
 ### The record — the admin's System page
 
 Every upgrade writes `/var/lib/dorna/upgrade.json`: when it started and
