@@ -180,13 +180,14 @@ systemctl enable dorna-orchestrator dorna-vision dorna-jupyter
 # never guessed. `system`: the app that owns the System page (the upgrade,
 # from the browser) — the workspace here; it upgrades every part, vision
 # included, and the vision server shows no System page of its own. `links`:
-# where the workspace's Dorna Lab and Vision cards and nav item point;
-# {host} is the address the browser reached the page by, {subnet} its first
-# three octets. This unit: the robot (Dorna Lab) at .10, the vision server
-# on this computer, :4001.
+# where the workspace's Dorna Lab and Vision cards and the vision server's
+# Workspace card point; {host} is the address the browser reached the page
+# by, {subnet} its first three octets. This unit: the robot (Dorna Lab) at
+# .10, the vision server and the workspace both on this computer — the
+# vision server on :4001, the workspace on :80.
 install -d /etc/dorna
 cat > /etc/dorna/unit.json <<'JSON'
-{"system": "workspace", "links": {"dorna_lab": "http://{subnet}.10/", "vision": "http://{host}:4001/"}}
+{"system": "workspace", "links": {"dorna_lab": "http://{subnet}.10/", "vision": "http://{host}:4001/", "workspace": "http://{host}/"}}
 JSON
 
 #####################
