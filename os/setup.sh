@@ -124,6 +124,26 @@ UNIT
 # the vision server. :4001 — the orchestrator holds :80 on this computer,
 # and 4001 is the vision port the workspace's j2 default names. The
 # device bus is the local mosquitto (DEVICE_MQTT_HOST defaults to localhost).
+# The Files page's folder — the operator's: /home/dorna/captures, dorna's,
+# named to the service below. The server gives everything it writes there
+# the folder's owner (dorna_vision/server/files.py), so captures are
+# reachable from Jupyter and a shell. Captures from before, in the
+# service's old default (/root/captures), move here once; a name already
+# here is never overwritten — that entry stays in /root/captures, said so.
+install -d -o dorna -g dorna /home/dorna/captures
+if [ -d /root/captures ]; then
+    for f in /root/captures/* /root/captures/.[!.]*; do
+        [ -e "$f" ] || continue
+        if [ -e "/home/dorna/captures/$(basename "$f")" ]; then
+            echo "captures: kept /root/captures/$(basename "$f") — /home/dorna/captures has that name"
+        else
+            mv "$f" /home/dorna/captures/
+        fi
+    done
+    chown -R dorna:dorna /home/dorna/captures
+    rmdir /root/captures 2>/dev/null || true
+fi
+
 cat > /etc/systemd/system/dorna-vision.service <<'UNIT'
 [Unit]
 Description=Dorna vision server (dorna_vision.server)
@@ -134,7 +154,7 @@ Wants=network-online.target
 WorkingDirectory=/home/dorna/Downloads/vision
 Environment=HOME=/root PATH=/opt/dorna/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin PYTHONUNBUFFERED=1
 EnvironmentFile=-/etc/default/dorna-vision
-ExecStart=/opt/dorna/venv/bin/python3 -u -m dorna_vision.server --host 0.0.0.0 --port 4001
+ExecStart=/opt/dorna/venv/bin/python3 -u -m dorna_vision.server --host 0.0.0.0 --port 4001 --captures /home/dorna/captures
 Restart=on-failure
 RestartSec=3
 StandardOutput=journal
